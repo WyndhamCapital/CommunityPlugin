@@ -17,10 +17,8 @@ namespace CommunityPlugin.Objects
         
         public static bool CheckAccess(string pluginName, bool menu = false, bool loan = false)
         {
-            if (EncompassHelper.IsTest() || CDOHelper.CDO.CommunitySettings.SuperAdminRun)
-                return true;
 
-            
+
             if (Plugins != null) return CheckAccessInPlugins(pluginName, menu, loan);
 
 
@@ -47,7 +45,10 @@ namespace CommunityPlugin.Objects
 
             if (pluginSettings.Permissions.Everyone) return true;
 
-            
+            if (EncompassHelper.IsTest() && pluginSettings.Permissions.TestEnvironmentRun) return true;
+
+            if (EncompassHelper.ContainsPersona(new List<string>() { "Super Admin" }) && pluginSettings.Permissions.SuperAdminRun) return true; 
+
             var isAllowedToRun = !loan && pluginSettings.Permissions.Everyone;
 
             if (!isAllowedToRun && pluginSettings.Permissions.Personas != null)

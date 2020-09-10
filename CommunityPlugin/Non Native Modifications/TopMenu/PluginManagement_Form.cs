@@ -11,7 +11,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             InitializeComponent();
             CDO cdo = CDOHelper.CDO;
-            chkAdmin.Checked = cdo.CommunitySettings.SuperAdminRun;
             chkSide.Checked = cdo.CommunitySettings.SideMenuOpenByDefault.Contains("True");
             txtTest.Text = cdo.CommunitySettings.TestServer;
             flwPlugins.Controls.Add(new AccessControl());
@@ -21,7 +20,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             CDO cdo = CDOHelper.CDO;
             cdo.CommunitySettings.SideMenuOpenByDefault = chkSide.Checked ? "True" : "False";
-            cdo.CommunitySettings.SuperAdminRun = chkAdmin.Checked;
             cdo.CommunitySettings.TestServer = txtTest.Text;
             CDOHelper.UpdateCDO(cdo);
             CDOHelper.UploadCDO();

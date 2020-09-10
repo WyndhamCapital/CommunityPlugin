@@ -11,9 +11,6 @@ namespace CommunityPlugin.Objects.Models
         [JsonProperty("TestServer")]
         public string TestServer { get; set; }
 
-        [JsonProperty("SuperAdminRun")]
-        public bool SuperAdminRun { get; set; }
-
         [JsonProperty("Links")]
         public Dictionary<string, Dictionary<string,Dictionary<string, string>>> Links { get; set; }
 
