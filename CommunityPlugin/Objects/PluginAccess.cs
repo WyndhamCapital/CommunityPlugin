@@ -47,7 +47,7 @@ namespace CommunityPlugin.Objects
 
             if (EncompassHelper.IsTest() && pluginSettings.Permissions.TestEnvironmentRun) return true;
 
-            if (EncompassHelper.ContainsPersona(new List<string>() { "Super Admin" }) && pluginSettings.Permissions.SuperAdminRun) return true; 
+            if (EncompassHelper.ContainsPersona(new List<string>() { "Super Administrator" }) && pluginSettings.Permissions.SuperAdminRun) return true; 
 
             var isAllowedToRun = !loan && pluginSettings.Permissions.Everyone;
 
