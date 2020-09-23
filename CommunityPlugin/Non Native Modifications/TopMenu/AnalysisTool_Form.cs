@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
@@ -20,23 +22,33 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             AnalysisClasses.AddRange(i.GetAll(typeof(AnalysisBase)).Select(x=> Activator.CreateInstance(x)).Cast<AnalysisBase>().ToList());
             cmbFilter.Items.AddRange(AnalysisClasses.Select(x=>x.GetType().Name).ToArray());
             Tracing.Debug = true;
-
-            backgroundWorker1.DoWork += BackgroundWorker1_DoWork;
-            backgroundWorker1.RunWorkerAsync();
         }
 
-
-        private void BackgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        public void LoadAnalysisToolCache()
         {
+
             pnlStatus.Visible = true;
 
-            foreach(AnalysisBase baseClass in AnalysisClasses)
-                baseClass.LoadCache();
-
+            Thread thread = new Thread(new ThreadStart(WorkThreadFunction));
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            while (thread.IsAlive)
+            {
+                Thread.Sleep(500);
+                Application.DoEvents();
+            }
 
             pnlStatus.Visible = false;
+
         }
 
+        private void WorkThreadFunction()
+        {
+            foreach (AnalysisBase baseClass in AnalysisClasses)
+                baseClass.LoadCache();
+        }
+
+ 
         private void btnSearch_Click(object sender, EventArgs e)
         {
             if(CurrentAnalysis != null)
@@ -61,5 +73,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             CurrentAnalysis = current;
         }
+
+
     }
 }

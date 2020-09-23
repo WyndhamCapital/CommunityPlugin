@@ -30,14 +30,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu.AnalysisTools
             Search = Search.ToUpper();
 
             List<InputForm> inputForms = (List<InputForm>)Cache;
-            InputFormInfo[] forms = EncompassHelper.SessionObjects.FormManager.GetAllFormInfos();
-            foreach (InputFormInfo form in forms)
-            {
-                InputForm encForm = new InputForm(EncompassHelper.SessionObjects, form);
-                inputForms.Add(encForm);
-
-            }
-
+  
             List<InputFormResult> results = new List<InputFormResult>();
 
             foreach (var inputform in inputForms)

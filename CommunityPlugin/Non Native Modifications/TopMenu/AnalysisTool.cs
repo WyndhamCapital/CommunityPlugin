@@ -14,6 +14,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             AnalysisTool_Form f = new AnalysisTool_Form();
             f.Show();
+            f.LoadAnalysisToolCache();
+
         }
     }
 }
