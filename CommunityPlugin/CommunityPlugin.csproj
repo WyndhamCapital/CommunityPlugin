@@ -246,6 +246,13 @@
     <Compile Include="Non Native Modifications\TopMenu\AutoMailer_Form.Designer.cs">
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields.cs" />
+    <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.Designer.cs">
+      <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Non Native Modifications\TopMenu\WcmEmailTemplate.cs" />
     <Compile Include="Non Native Modifications\TopMenu\WCMEmailTemplate_Form.cs">
       <SubType>Form</SubType>
@@ -407,6 +414,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\AutoMailer_Form.resx">
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.resx">
+      <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\WCMEmailTemplate_Form.resx">
       <DependentUpon>WCMEmailTemplate_Form.cs</DependentUpon>
