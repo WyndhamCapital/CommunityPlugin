@@ -18,13 +18,8 @@ namespace CommunityPlugin.Objects
         {
             InitializeComponent();
             InterfaceHelper ih = new InterfaceHelper();
-
-            List<string> pluginNames = new List<string>();
-            pluginNames.AddRange(ih.GetAll(typeof(Plugin)).Select(x => x.Name).OrderBy(x => x).ToList());
-            pluginNames.AddRange(ih.GetAll(typeof(MenuItemBase)).Select(x => x.Name).OrderBy(x => x).ToList());
-            pluginNames = pluginNames.OrderBy(x => x).ToList();
-
-            comboBox1.Items.AddRange(pluginNames.ToArray());
+            comboBox1.Items.AddRange(ih.GetAll(typeof(Plugin)).Select(x => x.Name).ToArray());
+            comboBox1.Items.AddRange(ih.GetAll(typeof(MenuItemBase)).Select(x => x.Name).ToArray());
             comboBox1.SelectedIndex = 0;
             comboBox1.TextChanged += ComboBox1_TextChanged;
             cbPersonas.Items.AddRange(EncompassApplication.Session.Users.Personas.Cast<EllieMae.Encompass.BusinessObjects.Users.Persona>().Select(x => x.Name).ToArray());
@@ -39,6 +34,8 @@ namespace CommunityPlugin.Objects
             bool flag = plugins.ContainsKey(Name);
             PluginSettings settings = flag ? plugins[Name] : null;
             chkAllAccess.Checked = flag ? settings.Permissions.Everyone : false;
+            chkSuperAdminRun.Checked = flag ? settings.Permissions.SuperAdminRun : false;
+            chkTestEnvRun.Checked = flag ? settings.Permissions.TestEnvironmentRun : false;
             for (int i = 0; i < cbPersonas.Items.Count; i++)
             {
                 if(flag)
@@ -63,6 +60,9 @@ namespace CommunityPlugin.Objects
 
             bool flag = plugins.ContainsKey(Name);
             PluginSettings settings = flag ? plugins[Name] : new PluginSettings();
+
+            settings.Permissions.SuperAdminRun = chkSuperAdminRun.Checked;
+            settings.Permissions.TestEnvironmentRun = chkTestEnvRun.Checked;
             settings.Permissions.Everyone = chkAllAccess.Checked;
             settings.Permissions.Personas = cbPersonas.CheckedItems.OfType<string>().ToList();
             settings.Permissions.UserIDs = cbUsers.CheckedItems.OfType<string>().ToList();
@@ -72,6 +72,11 @@ namespace CommunityPlugin.Objects
             CDOHelper.UpdateCDO(cdo);
             CDOHelper.UploadCDO();
             MessageBox.Show($"{settings.PluginName} Saved");
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
 
         }
     }

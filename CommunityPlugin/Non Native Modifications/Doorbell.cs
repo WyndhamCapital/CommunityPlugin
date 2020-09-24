@@ -85,6 +85,9 @@ namespace CommunityPlugin.Non_Native_Modifications
 
         private void RingDoorbell()
         {
+            //if robotics, Tag.LockInfo.LockedBy, do not ring doorbell....
+
+
             DataExchange data = EncompassApplication.Session.DataExchange;
             string lockInfo = $"{EncompassHelper.User.FullName} Is Trying to Access Loan File #{Tag.LoanNumber}, Please Exit the File For A Moment";
             data.PostDataToUser(Tag.LockInfo.LockedBy, lockInfo);

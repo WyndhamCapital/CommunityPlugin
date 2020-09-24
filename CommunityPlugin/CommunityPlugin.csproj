@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CommunityPlugin</RootNamespace>
-    <AssemblyName>CommunityPlugin</AssemblyName>
+    <AssemblyName>WcmCommunityPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>false</Deterministic>
@@ -129,6 +129,9 @@
     <Reference Include="EMLoanUtils15">
       <HintPath>..\..\..\..\..\..\SmartClientCache\Apps\UAC\Ellie Mae\xIHR5EqGa7zPnRG0YpD5z4TPAB0=\Encompass360\EMLoanUtils15.dll</HintPath>
     </Reference>
+    <Reference Include="Encompass.DocService">
+      <HintPath>..\..\platform\encompass_lib\SDK_20.1\Encompass.DocService.dll</HintPath>
+    </Reference>
     <Reference Include="EncompassAutomation">
       <HintPath>..\..\..\..\..\..\SmartClientCache\Apps\UAC\Ellie Mae\xIHR5EqGa7zPnRG0YpD5z4TPAB0=\Encompass360\EncompassAutomation.dll</HintPath>
     </Reference>
@@ -173,6 +176,7 @@
   <ItemGroup>
     <Compile Include="Non Native Modifications\AlphaAlerts.cs" />
     <Compile Include="Non Native Modifications\BackAndForward.cs" />
+    <Compile Include="Non Native Modifications\Dialog\BlendSendDisclosures.cs" />
     <Compile Include="Non Native Modifications\DisableServices.cs" />
     <Compile Include="Non Native Modifications\FormWrapper.cs" />
     <Compile Include="Non Native Modifications\GridSearch.cs" />
@@ -248,6 +252,13 @@
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.Designer.cs">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\WcmEmailTemplate.cs" />
+    <Compile Include="Non Native Modifications\TopMenu\WCMEmailTemplate_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\WCMEmailTemplate_Form.Designer.cs">
+      <DependentUpon>WCMEmailTemplate_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\Impersonate.cs" />
     <Compile Include="Non Native Modifications\TopMenu\Impersonate_Form.cs">
@@ -325,10 +336,12 @@
     <Compile Include="Objects\Models\AnalysisBase.cs" />
     <Compile Include="Objects\Models\AnalysisResult.cs" />
     <Compile Include="Objects\Models\AutoMailerCDORoot.cs" />
+    <Compile Include="Objects\Models\AutomatedEmailTemplate.cs" />
     <Compile Include="Objects\Models\BlockingCollectionQueue.cs" />
     <Compile Include="Objects\Models\BusRule.cs" />
     <Compile Include="Objects\Models\CDO.cs" />
     <Compile Include="Objects\Models\CloneBizRuleInfo.cs" />
+    <Compile Include="Objects\Models\EmailMessageWcmSignatureRequest.cs" />
     <Compile Include="Objects\Models\EncompassFieldInfo.cs" />
     <Compile Include="Objects\Models\EncompassLog.cs" />
     <Compile Include="Objects\Models\FilterCDO.cs" />
@@ -404,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.resx">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\WCMEmailTemplate_Form.resx">
+      <DependentUpon>WCMEmailTemplate_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\Impersonate_Form.resx">
       <DependentUpon>Impersonate_Form.cs</DependentUpon>

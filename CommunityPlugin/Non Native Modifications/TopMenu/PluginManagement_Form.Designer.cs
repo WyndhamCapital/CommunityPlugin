@@ -30,7 +30,6 @@
         {
             this.flwPlugins = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.chkAdmin = new System.Windows.Forms.CheckBox();
             this.txtTest = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -43,36 +42,26 @@
             // 
             this.flwPlugins.AutoScroll = true;
             this.flwPlugins.Controls.Add(this.groupBox1);
+            this.flwPlugins.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flwPlugins.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flwPlugins.Location = new System.Drawing.Point(0, 0);
             this.flwPlugins.Name = "flwPlugins";
-            this.flwPlugins.Size = new System.Drawing.Size(296, 393);
+            this.flwPlugins.Size = new System.Drawing.Size(307, 442);
             this.flwPlugins.TabIndex = 0;
             this.flwPlugins.WrapContents = false;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.chkAdmin);
             this.groupBox1.Controls.Add(this.txtTest);
             this.groupBox1.Controls.Add(this.btnSave);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.chkSide);
             this.groupBox1.Location = new System.Drawing.Point(3, 3);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(290, 95);
+            this.groupBox1.Size = new System.Drawing.Size(304, 95);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Global Settings";
-            // 
-            // chkAdmin
-            // 
-            this.chkAdmin.AutoSize = true;
-            this.chkAdmin.Location = new System.Drawing.Point(13, 45);
-            this.chkAdmin.Name = "chkAdmin";
-            this.chkAdmin.Size = new System.Drawing.Size(124, 17);
-            this.chkAdmin.TabIndex = 3;
-            this.chkAdmin.Text = "Super Admin Access";
-            this.chkAdmin.UseVisualStyleBackColor = true;
             // 
             // txtTest
             // 
@@ -83,7 +72,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(202, 62);
+            this.btnSave.Location = new System.Drawing.Point(202, 56);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
@@ -103,7 +92,7 @@
             // chkSide
             // 
             this.chkSide.AutoSize = true;
-            this.chkSide.Location = new System.Drawing.Point(13, 68);
+            this.chkSide.Location = new System.Drawing.Point(13, 62);
             this.chkSide.Name = "chkSide";
             this.chkSide.Size = new System.Drawing.Size(103, 17);
             this.chkSide.TabIndex = 4;
@@ -114,7 +103,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(296, 393);
+            this.ClientSize = new System.Drawing.Size(307, 442);
             this.Controls.Add(this.flwPlugins);
             this.Name = "PluginManagement_Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -129,7 +118,6 @@
         #endregion
 
         private System.Windows.Forms.FlowLayoutPanel flwPlugins;
-        private System.Windows.Forms.CheckBox chkAdmin;
         private System.Windows.Forms.CheckBox chkSide;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label label1;
