@@ -206,6 +206,55 @@ namespace CommunityPlugin.Objects.Helpers
                 EncompassApplication.CurrentLoan.Fields[Loan.Fields.GetFieldAt(FieldID, Convert.ToInt32(Index)).ID].Value = string.Empty;
         }
 
+        public static GetAutomatedPrelimConditionsResponse GetAutomedConditionBusinessRuleConditions()
+        {
+            GetAutomatedPrelimConditionsResponse response = new GetAutomatedPrelimConditionsResponse()
+            {
+                Conditions = new List<AutomedPrelimCondition>(),
+                Errors = new List<string>()
+            };
+
+            SessionObjects sos = EncompassApplication.Session.GetType().GetProperties(BindingFlags.NonPublic | BindingFlags.Instance).Single(pi => pi.Name == "SessionObjects").GetValue(EncompassApplication.Session) as SessionObjects;
+            var rules = sos.BpmManager.GetRules(BizRuleType.AutomatedConditions, true);
+            foreach (var rule in rules)
+            {
+
+                try
+                {
+                    var automedRule = SettingsHelperMethods.ConvertBusinessRuleToTyped<AutomatedConditionRuleInfo>(rule);
+
+                    foreach (var condition in automedRule.Conditions)
+                    {
+                        var template = EncompassApplication.Session.Loans.Templates.UnderwritingConditions.GetTemplateByTitle(condition.ConditionName);
+                        string tmeplateId = "";
+                        if (template != null)
+                        {
+                            tmeplateId = template.ID;
+                        }
+
+                        AutomedPrelimCondition newCondition = new AutomedPrelimCondition()
+                        {
+                            BusinessRuleName = rule.RuleName,
+                            UwConditionName = condition.ConditionName,
+                            UwTemplateId = tmeplateId,
+                            BusinesRuleLastModifiedBy = rule.LastModifiedByUserId
+                        };
+
+                        response.Conditions.Add(newCondition);
+
+                    }
+                }
+                catch (Exception ex)
+                {
+                    response.Errors.Add($"{rule.RuleName}. ERROR '{ex.ToString()}'");
+                }
+
+
+            }
+
+            return response;
+
+        }
 
     }
 }

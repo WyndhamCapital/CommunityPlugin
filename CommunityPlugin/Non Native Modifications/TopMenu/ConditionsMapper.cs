@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public class WcmEmailTemplate : MenuItemBase
+    public class ConditionsMapper : MenuItemBase
     {
-
         public override bool CanRun()
         {
-            return PluginAccess.CheckAccess(nameof(WcmEmailTemplate));
+            return PluginAccess.CheckAccess(nameof(ConditionsMapper));
         }
 
         protected override void menuItem_Click(object sender, EventArgs e)
         {
-            WCMEmailTemplate_Form f = new WCMEmailTemplate_Form();
+            ConditionsMapperTable_Form f = new ConditionsMapperTable_Form();
             f.Show();
         }
     }
-
 }

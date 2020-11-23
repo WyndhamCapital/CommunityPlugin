@@ -246,6 +246,25 @@
     <Compile Include="Non Native Modifications\TopMenu\AutoMailer_Form.Designer.cs">
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper.cs" />
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.Designer.cs">
+      <DependentUpon>ConditionsMapperEditCondition_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.Designer.cs">
+      <DependentUpon>ConditionsMapperTable_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.Designer.cs">
+      <DependentUpon>ConditionsMapperSelectPrelimCondition_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields.cs" />
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.cs">
       <SubType>Form</SubType>
@@ -337,6 +356,7 @@
     <Compile Include="Objects\Models\AnalysisResult.cs" />
     <Compile Include="Objects\Models\AutoMailerCDORoot.cs" />
     <Compile Include="Objects\Models\AutomatedEmailTemplate.cs" />
+    <Compile Include="Objects\Models\AutomedPrelimCondition.cs" />
     <Compile Include="Objects\Models\BlockingCollectionQueue.cs" />
     <Compile Include="Objects\Models\BusRule.cs" />
     <Compile Include="Objects\Models\CDO.cs" />
@@ -345,6 +365,7 @@
     <Compile Include="Objects\Models\EncompassFieldInfo.cs" />
     <Compile Include="Objects\Models\EncompassLog.cs" />
     <Compile Include="Objects\Models\FilterCDO.cs" />
+    <Compile Include="Objects\Models\GetAutomatedPrelimConditionsResponse.cs" />
     <Compile Include="Objects\Models\IFBLog.cs" />
     <Compile Include="Objects\Models\InputForm.cs" />
     <Compile Include="Objects\Models\InputFormControl.cs" />
@@ -395,7 +416,16 @@
     <Compile Include="Standard Plugins\OpenInputForm.cs" />
     <Compile Include="Standard Plugins\VirtualFields.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\platform\src\WyndhamLibCommonNoEncompassSDK\WyndhamLibCommonNoEncompassSDK.csproj">
+      <Project>{6ef87f48-6e30-47d0-82b4-080137d8e1c0}</Project>
+      <Name>WyndhamLibCommonNoEncompassSDK</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\platform\src\WyndhamLibGlobal\WyndhamLibGlobal.csproj">
+      <Project>{eeac546f-9894-435b-94ea-3223f34a4d09}</Project>
+      <Name>WyndhamLibGlobal</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Non Native Modifications\Pipeline\ReassignmentDialog.resx">
       <DependentUpon>ReassignmentDialog.cs</DependentUpon>
@@ -414,6 +444,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\AutoMailer_Form.resx">
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.resx">
+      <DependentUpon>ConditionsMapperEditCondition_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.resx">
+      <DependentUpon>ConditionsMapperSelectPrelimCondition_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.resx">
+      <DependentUpon>ConditionsMapperTable_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.resx">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
@@ -450,4 +489,8 @@
     <None Include="Resources\Forward.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>
