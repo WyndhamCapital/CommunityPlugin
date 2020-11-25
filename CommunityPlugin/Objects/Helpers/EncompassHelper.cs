@@ -221,7 +221,7 @@ namespace CommunityPlugin.Objects.Helpers
 
                 try
                 {
-                    var automedRule = SettingsHelperMethods.ConvertBusinessRuleToTyped<AutomatedConditionRuleInfo>(rule);
+                    var automedRule = Helpers.Reflect.ConvertToTyped<AutomatedConditionRuleInfo>(rule);
 
                     foreach (var condition in automedRule.Conditions)
                     {

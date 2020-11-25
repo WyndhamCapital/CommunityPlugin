@@ -119,7 +119,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 return;
             }
 
-            DialogResult dialogResult = MessageBox.Show("Deletig a condition can NOT be undone. Do you wish to continue?", "Delete Condition", MessageBoxButtons.YesNo);
+            DialogResult dialogResult = MessageBox.Show("Deleting a condition can NOT be undone. Do you wish to continue?", "Delete Condition", MessageBoxButtons.YesNo);
             if (dialogResult == DialogResult.Yes)
             {
                 ConditionsDataGridView.Rows.RemoveAt(ConditionsDataGridView.CurrentCell.RowIndex);

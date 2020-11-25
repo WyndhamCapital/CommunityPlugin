@@ -33,6 +33,7 @@
             this.deleteCondition = new System.Windows.Forms.PictureBox();
             this.editCondition = new System.Windows.Forms.PictureBox();
             this.ViewJson_button = new System.Windows.Forms.Button();
+            this.addCondition = new System.Windows.Forms.PictureBox();
             this.ConditionsDataGridView = new System.Windows.Forms.DataGridView();
             this.EncCondition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BlendFollowUp = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -40,12 +41,11 @@
             this.PostPrelim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.button_Cancel = new System.Windows.Forms.Button();
             this.button_ApplyChanges = new System.Windows.Forms.Button();
-            this.addCondition = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.deleteCondition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editCondition)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ConditionsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.addCondition)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ConditionsDataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -89,6 +89,16 @@
             this.ViewJson_button.TabIndex = 2;
             this.ViewJson_button.Text = "View Json";
             this.ViewJson_button.UseVisualStyleBackColor = true;
+            // 
+            // addCondition
+            // 
+            this.addCondition.Image = ((System.Drawing.Image)(resources.GetObject("addCondition.Image")));
+            this.addCondition.Location = new System.Drawing.Point(572, 3);
+            this.addCondition.Name = "addCondition";
+            this.addCondition.Size = new System.Drawing.Size(28, 28);
+            this.addCondition.TabIndex = 0;
+            this.addCondition.TabStop = false;
+            this.addCondition.Click += new System.EventHandler(this.addCondition_Click);
             // 
             // ConditionsDataGridView
             // 
@@ -151,16 +161,6 @@
             this.button_ApplyChanges.UseVisualStyleBackColor = true;
             this.button_ApplyChanges.Click += new System.EventHandler(this.button_ApplyChanges_Click);
             // 
-            // addCondition
-            // 
-            this.addCondition.Image = ((System.Drawing.Image)(resources.GetObject("addCondition.Image")));
-            this.addCondition.Location = new System.Drawing.Point(572, 3);
-            this.addCondition.Name = "addCondition";
-            this.addCondition.Size = new System.Drawing.Size(28, 28);
-            this.addCondition.TabIndex = 0;
-            this.addCondition.TabStop = false;
-            this.addCondition.Click += new System.EventHandler(this.addCondition_Click);
-            // 
             // ConditionsMapperTable_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -170,14 +170,15 @@
             this.Controls.Add(this.button_ApplyChanges);
             this.Controls.Add(this.ConditionsDataGridView);
             this.Controls.Add(this.panel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ConditionsMapperTable_Form";
-            this.Text = "ConditionsMapperUpdate_Form";
+            this.Text = "Conditions Mapper";
             this.Load += new System.EventHandler(this.ConditionsMapperUpdate_Form_Load);
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.deleteCondition)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.editCondition)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ConditionsDataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.addCondition)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ConditionsDataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }

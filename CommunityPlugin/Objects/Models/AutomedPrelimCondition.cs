@@ -13,6 +13,5 @@ namespace CommunityPlugin.Objects.Models
         public string UwTemplateId { get; set; }
 
         public string BusinesRuleLastModifiedBy { get; set; }
-        public DateTime BusinessRuleLastModifiedDate { get; set; }
     }
 }

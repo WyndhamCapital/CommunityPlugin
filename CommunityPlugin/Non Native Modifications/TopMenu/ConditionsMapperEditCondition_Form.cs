@@ -46,7 +46,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             TheCondition.MapDocumentToEncompassEfolder = mapConditionToEfolderCheckBox.Checked;
 
             TheCondition.BlendConditionName = blendFollowUpTypeTextBox.Text;
-            TheCondition.EncompassUwConditionTemplateId = uwConditionNameTextBox.Text;
+            TheCondition.EncompassUwConditionTemplateId = uwConditionTemplateIdTextBox.Text;
             TheCondition.PostConditionOnBlendApplications = postConditionOnBlendAppsCheckBox.Checked;
 
             return TheCondition;
@@ -54,15 +54,45 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void ConditionsMapperEditCondition_Form_Load(object sender, EventArgs e)
         {
-            toolTipBlendFollowUpType.SetToolTip(blendFollowUpTypeTextBox, "Optional: if there is a Blend equivalent for this condition, if the loan needs this condition and the follow-up did NOT fire in Blend, we will fire it.");
-            toolTipUwConditionName.SetToolTip(uwConditionNameTextBox, "This field doesn't actually control anything and is strictly for our record keeping.");
+            toolTipBlendFollowUpType.SetToolTip(blendFollowupHelpPictureBox, $"Optional: If there is a Blend Follow-Up Equivalent to this UW Condition 2 things will be accomplished: {Environment.NewLine + Environment.NewLine}" +
+                $"1. During Prelim Conditions, if the loan is a Blend App and that Follow-up did not fire, we will post our WCM Prelim Condition.{Environment.NewLine}" +
+                $"2. When Synching Blend conditions, we will map this Follow-Up to this Efolder.");
+
+            toolTipBlendFollowUpType.SetToolTip(eFolderNameHelpPictureBox, $"Both prelim conditions and Blend Follow-Ups will be mapped to this eFolder.");
         }
 
 
         private void button_ApplyChanges_Click(object sender, EventArgs e)
         {
+            if (!this.ValidateContents())
+                return;
+
             this.MapUiChangesToCondition();
             this.DialogResult = DialogResult.OK;
+        }
+
+        private bool ValidateContents()
+        {
+            if (string.IsNullOrEmpty(uwConditionNameTextBox.Text))
+            {
+                MessageBox.Show("UW Condition Name is reqruired.");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(eFolderName_textBox.Text))
+            {
+                MessageBox.Show("Efolder Name is reqruired.");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(uwConditionTemplateIdTextBox.Text))
+            {
+                MessageBox.Show("Prelim Condition Template ID is reqruired.");
+                return false;
+            }
+
+
+            return true;
         }
 
         private void button_Cancel_Click(object sender, EventArgs e)
@@ -70,8 +100,17 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.DialogResult = DialogResult.Cancel;
         }
 
-        private void addCondition_Click(object sender, EventArgs e)
+        private void addPrelimCondition_Click(object sender, EventArgs e)
         {
+            using (ConditionsMapperSelectPrelimCondition_Form selectPrelimForm = new ConditionsMapperSelectPrelimCondition_Form())
+            {
+
+                if (selectPrelimForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
+                    return;
+
+                uwConditionNameTextBox.Text = selectPrelimForm.ConditionSelected.UwConditionName;
+                uwConditionTemplateIdTextBox.Text = selectPrelimForm.ConditionSelected.UwTemplateId;
+            }
 
         }
     }
