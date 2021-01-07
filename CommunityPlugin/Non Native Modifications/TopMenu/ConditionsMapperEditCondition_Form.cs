@@ -35,6 +35,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             mapConditionToEfolderCheckBox.Checked = condition.MapDocumentToEncompassEfolder;
 
             blendFollowUpTypeTextBox.Text = condition.BlendConditionName;
+            blendDocumentTypeTextBox.Text = condition.BlendDocumentType;
+            blendSystemFollowUpDescriptionTextBox.Text = condition.BlendSystemFollowUpContextDescription;
+
             uwConditionTemplateIdTextBox.Text = condition.EncompassUwConditionTemplateId;
             postConditionOnBlendAppsCheckBox.Checked = condition.PostConditionOnBlendApplications;
         }
@@ -46,6 +49,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             TheCondition.MapDocumentToEncompassEfolder = mapConditionToEfolderCheckBox.Checked;
 
             TheCondition.BlendConditionName = blendFollowUpTypeTextBox.Text;
+            TheCondition.BlendDocumentType = blendDocumentTypeTextBox.Text;
+            TheCondition.BlendSystemFollowUpContextDescription = blendSystemFollowUpDescriptionTextBox.Text;
+
             TheCondition.EncompassUwConditionTemplateId = uwConditionTemplateIdTextBox.Text;
             TheCondition.PostConditionOnBlendApplications = postConditionOnBlendAppsCheckBox.Checked;
 
@@ -59,6 +65,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 $"2. When Synching Blend conditions, we will map this Follow-Up to this Efolder.");
 
             toolTipBlendFollowUpType.SetToolTip(eFolderNameHelpPictureBox, $"Both prelim conditions and Blend Follow-Ups will be mapped to this eFolder.");
+            toolTipBlendFollowUpType.SetToolTip(blendFollowupSubNameHelpPictureBox, $"OPTIONAL: Some blend Follow-Ups are 'DocumentRequest' and the Document Type tells us the actual follow-up. i.e. \"Asset Statement\" is a 'DocRequest' Follow-Up and \"AssetStatement\" is document Type");
+            toolTipBlendFollowUpType.SetToolTip(blendSystemFollowUpDescriptionTextBox, $"OPTIONAL: Some blend Follow-Ups are 'System' and the 'Context' 'Description' property tells us the actual follow-up. i.e. \"Home Insurance\" is a 'System' Follow-Up and \"Home Insurance\" is the 'Context' 'Description' property");
+
         }
 
 
@@ -73,15 +82,15 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private bool ValidateContents()
         {
-            if (string.IsNullOrEmpty(uwConditionNameTextBox.Text))
-            {
-                MessageBox.Show("UW Condition Name is reqruired.");
-                return false;
-            }
-
             if (string.IsNullOrEmpty(eFolderName_textBox.Text))
             {
                 MessageBox.Show("Efolder Name is reqruired.");
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(uwConditionNameTextBox.Text))
+            {
+                MessageBox.Show("UW Condition Name is reqruired.");
                 return false;
             }
 
@@ -90,7 +99,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 MessageBox.Show("Prelim Condition Template ID is reqruired.");
                 return false;
             }
-
 
             return true;
         }

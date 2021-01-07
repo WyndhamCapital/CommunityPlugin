@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommunityPlugin.Objects.Models;
 using WyndhamLibGlobal.BlendPortal;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
