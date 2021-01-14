@@ -30,7 +30,7 @@ namespace CommunityPlugin.Non_Native_Modifications
             t.Tick += T_Tick;
         }
 
-        private static void T_Tick(object sender, EventArgs e)
+        public static void T_Tick(object sender, EventArgs e)
         {
             RefreshFormList();
         }

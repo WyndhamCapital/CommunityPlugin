@@ -4,6 +4,7 @@ using EllieMae.EMLite.UI;
 using EllieMae.EMLite.WebServices;
 using EllieMae.Encompass.Automation;
 using EllieMae.Encompass.BusinessObjects.Loans.Logging;
+using EllieMae.Encompass.BusinessObjects.Users;
 using Encompass.DocService;
 using Newtonsoft.Json;
 using System;
@@ -14,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,6 +28,8 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         GridView DocumentGrid;
         string DocumentGridControlId = "gvDocuments";
 
+        Form eFolderDialogForm;
+
         public override bool Authorized()
         {
             return PluginAccess.CheckAccess(nameof(BlendSendDisclosures));
@@ -33,23 +37,101 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         public override void Login(object sender, EventArgs e)
         {
+
             FormWrapper.FormOpened += FormWrapper_FormOpened;
         }
+
+
 
         private void FormWrapper_FormOpened(object sender, Objects.Args.FormOpenedArgs e)
         {
             foreach (Form openForm in (ReadOnlyCollectionBase)Application.OpenForms)
             {
-                if (!(openForm.Name != "FormSelectionDialog"))
+                switch (openForm.Name.ToLower())
                 {
-                    this.emDialogForm = openForm;
-                    HideKmSendDisclosuresButton();
+                    case "formselectiondialog":
+                        this.emDialogForm = openForm;
+                        HideKmSendDisclosuresButton();
 
-                    // SP 09/20 -- Uncomment here to inject WCM button
-                    //InjectWcmSendDisclosuresButton();
+                        // SP 09/20 -- Uncomment here to inject WCM button
+                        //InjectWcmSendDisclosuresButton();
+                        break;
+
+                    case "efolderdialog":
+                        this.HideKmRetreiveBlendDocsButton(openForm);
+                        break;
+
+                    default:
+                        break;
+                }
+
+            }
+        }
+
+
+        private void HideKmRetreiveBlendDocsButton(Form eFolderDialogForm)
+        {
+            Control[] pnlToolbarcontrol = eFolderDialogForm.Controls.Find("pnlToolbar", true);
+
+
+            if (pnlToolbarcontrol != null && pnlToolbarcontrol.Count() > 0)
+            {
+                FlowLayoutPanel flowLayoutPanel = pnlToolbarcontrol[0] as FlowLayoutPanel;
+                if (flowLayoutPanel == null)
+                    return;
+
+
+                //Find KM button and hide it -- we don't want users pulling in documents from their control
+                if (flowLayoutPanel.Controls != null && flowLayoutPanel.Controls.Count > 0)
+                {
+
+                    var kmButton = flowLayoutPanel.Controls.Find("btnBlendRetrieveDocs", true);
+
+
+ 
+                    if (kmButton == null || kmButton.Count() == 0)
+                    {
+                        // km button doesn't appear until AFTER form loads
+                        // if button doesn't exist when form loads, start new thread that will search for it and wait until it finds it
+                        Task hideBtnTask = new TaskFactory().StartNew(() =>
+                        {
+                            for (int i = 0; i < 30; i++)
+                            {
+                                Thread.Sleep(250);
+                                kmButton = flowLayoutPanel.Controls.Find("btnBlendRetrieveDocs", true);
+                                bool hideButtonSuccessful = HideKmRetreieveButton(kmButton);
+                                if (hideButtonSuccessful)
+                                {
+                                    break;
+                                }
+                            }
+
+                        });
+
+                    }
+                    else
+                    {
+                        this.HideKmRetreieveButton(kmButton);
+                    }
+
                 }
             }
         }
+
+        private bool HideKmRetreieveButton(Control[] kmButton)
+        {
+
+            if (kmButton != null && kmButton.Count() > 0)
+            {
+                Button kmSendDisclosuresButton = (Button)kmButton[0];
+                kmSendDisclosuresButton.Visible = false;
+                kmSendDisclosuresButton.Enabled = false;
+                return true;
+            }
+
+            return false;
+        }
+
 
         private void InjectWcmSendDisclosuresButton()
         {
