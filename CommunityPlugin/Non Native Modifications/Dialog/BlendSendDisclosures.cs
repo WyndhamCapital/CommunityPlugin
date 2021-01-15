@@ -57,9 +57,10 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                         //InjectWcmSendDisclosuresButton();
                         break;
 
-                    case "efolderdialog":
-                        this.HideKmRetreiveBlendDocsButton(openForm);
-                        break;
+                        //SP - 01/21 - KM allows you settings to turn this button off for certain personas... no need for code below
+                    //case "efolderdialog":
+                    //    this.HideKmRetreiveBlendDocsButton(openForm);
+                    //    break;
 
                     default:
                         break;
