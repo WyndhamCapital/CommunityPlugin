@@ -56,16 +56,15 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                         // SP 09/20 -- Uncomment here to inject WCM button
                         //InjectWcmSendDisclosuresButton();
                         break;
-
-                        //SP - 01/21 - KM allows you settings to turn this button off for certain personas... no need for code below
-                    //case "efolderdialog":
-                    //    this.HideKmRetreiveBlendDocsButton(openForm);
-                    //    break;
-
                     default:
                         break;
                 }
 
+            }
+
+            if (e.OpenForm.Name.Equals("efolderdialog", StringComparison.OrdinalIgnoreCase))
+            {
+                this.HideKmRetreiveBlendDocsButton(e.OpenForm);
             }
         }
 
@@ -89,7 +88,6 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                     var kmButton = flowLayoutPanel.Controls.Find("btnBlendRetrieveDocs", true);
 
 
- 
                     if (kmButton == null || kmButton.Count() == 0)
                     {
                         // km button doesn't appear until AFTER form loads
