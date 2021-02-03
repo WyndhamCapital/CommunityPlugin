@@ -34,7 +34,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             eFolderName_textBox.Text = condition.EncompassEfolderName;
             mapConditionToEfolderCheckBox.Checked = condition.MapDocumentToEncompassEfolder;
 
-            blendFollowUpTypeTextBox.Text = condition.BlendConditionName;
+            blendFollowUpTypeTextBox.Text = condition.BlendConditionType;
             uwConditionTemplateIdTextBox.Text = condition.EncompassUwConditionTemplateId;
         }
 
@@ -49,7 +49,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             TheCondition.EncompassEfolderName = eFolderName_textBox.Text;
             TheCondition.MapDocumentToEncompassEfolder = mapConditionToEfolderCheckBox.Checked;
 
-            TheCondition.BlendConditionName = blendFollowUpTypeTextBox.Text;
+            TheCondition.BlendConditionType = blendFollowUpTypeTextBox.Text;
             TheCondition.EncompassUwConditionTemplateId = uwConditionTemplateIdTextBox.Text;
 
             return TheCondition;
