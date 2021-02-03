@@ -16,7 +16,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
     public partial class ConditionsMapperTable_Form : Form
     {
         ConditionsMapperSettings ConditionMappingSettings = null;
-        private string conditonsManagerSettingsFile = "BlendConditionsMapper.json";
 
         public ConditionsMapperTable_Form()
         {
@@ -25,7 +24,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void ConditionsMapperUpdate_Form_Load(object sender, EventArgs e)
         {
-            ConditionMappingSettings = Objects.Helpers.CDOHelper.GetCustomDataObjectValue<ConditionsMapperSettings>(conditonsManagerSettingsFile);
+            ConditionMappingSettings = WyndhamLibGlobal.GlobalEncompassUtility.GetConditionsMapperSettings();
 
             this.LoadConditions(ConditionMappingSettings);
 
@@ -45,9 +44,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             object[] arrayToDisplay = new object[ConditionsDataGridView.Columns.Count];
 
             arrayToDisplay[0] = condition.EncompassConditionName;
-            arrayToDisplay[1] = condition.BlendConditionName;
+            arrayToDisplay[1] = condition.BlendConditionType;
             arrayToDisplay[2] = condition.EncompassEfolderName;
-            arrayToDisplay[3] = condition.PostConditionOnBlendApplications;
 
             return arrayToDisplay;
         }
@@ -148,8 +146,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             }
 
             ConditionMappingSettings.PrelimConditions = prelimConditions;
-        
-            Objects.Helpers.CDOHelper.SaveObjectToJsonCDO(conditonsManagerSettingsFile, ConditionMappingSettings);
+
+            Objects.Helpers.CDOHelper.SaveObjectToJsonCDO(WyndhamLibGlobal.GlobalEncompassUtility.GetConditionsMapperSettingsFileName(), ConditionMappingSettings);
 
             MessageBox.Show("Changes Saved!");
 

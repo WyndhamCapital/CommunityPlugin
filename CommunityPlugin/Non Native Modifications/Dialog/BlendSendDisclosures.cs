@@ -27,8 +27,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         Form emDialogForm;
         GridView DocumentGrid;
         string DocumentGridControlId = "gvDocuments";
-
-        Form eFolderDialogForm;
+        bool isPersonaAdminOrProcessor = false;
 
         public override bool Authorized()
         {
@@ -37,11 +36,27 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         public override void Login(object sender, EventArgs e)
         {
-
+            isPersonaAdminOrProcessor = IsPersonaProcessorOrAdmin();
             FormWrapper.FormOpened += FormWrapper_FormOpened;
         }
 
+        private bool IsPersonaProcessorOrAdmin()
+        {
+            foreach (EllieMae.Encompass.BusinessObjects.Users.Persona p in EncompassApplication.CurrentUser.Personas)
+            {
+     
+                if (p.Name.ToLower().Contains("administrator"))
+                {
+                    return true;
+                }
+                if (p.Name.ToLower().Contains("processor"))
+                {
+                    return true;
+                }
+            }
 
+            return false;
+        }
 
         private void FormWrapper_FormOpened(object sender, Objects.Args.FormOpenedArgs e)
         {
@@ -64,7 +79,10 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
             if (e.OpenForm.Name.Equals("efolderdialog", StringComparison.OrdinalIgnoreCase))
             {
-                this.HideKmRetreiveBlendDocsButton(e.OpenForm);
+                if (isPersonaAdminOrProcessor == false)
+                {
+                    this.HideKmRetreiveBlendDocsButton(e.OpenForm);
+                }
             }
         }
 

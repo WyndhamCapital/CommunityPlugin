@@ -35,12 +35,11 @@
             this.ViewJson_button = new System.Windows.Forms.Button();
             this.addCondition = new System.Windows.Forms.PictureBox();
             this.ConditionsDataGridView = new System.Windows.Forms.DataGridView();
+            this.button_Cancel = new System.Windows.Forms.Button();
+            this.button_ApplyChanges = new System.Windows.Forms.Button();
             this.EncCondition = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.BlendFollowUp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EfolderName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.PostPrelim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.button_Cancel = new System.Windows.Forms.Button();
-            this.button_ApplyChanges = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.deleteCondition)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.editCondition)).BeginInit();
@@ -108,8 +107,7 @@
             this.ConditionsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.EncCondition,
             this.BlendFollowUp,
-            this.EfolderName,
-            this.PostPrelim});
+            this.EfolderName});
             this.ConditionsDataGridView.Location = new System.Drawing.Point(3, 43);
             this.ConditionsDataGridView.MultiSelect = false;
             this.ConditionsDataGridView.Name = "ConditionsDataGridView";
@@ -117,29 +115,6 @@
             this.ConditionsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.ConditionsDataGridView.Size = new System.Drawing.Size(750, 273);
             this.ConditionsDataGridView.TabIndex = 6;
-            // 
-            // EncCondition
-            // 
-            this.EncCondition.HeaderText = "Encompass Condition";
-            this.EncCondition.Name = "EncCondition";
-            this.EncCondition.Width = 225;
-            // 
-            // BlendFollowUp
-            // 
-            this.BlendFollowUp.HeaderText = "Blend Follow-Up";
-            this.BlendFollowUp.Name = "BlendFollowUp";
-            this.BlendFollowUp.Width = 200;
-            // 
-            // EfolderName
-            // 
-            this.EfolderName.HeaderText = "Efolder Name";
-            this.EfolderName.Name = "EfolderName";
-            this.EfolderName.Width = 200;
-            // 
-            // PostPrelim
-            // 
-            this.PostPrelim.HeaderText = "Post Prelim to Blend App";
-            this.PostPrelim.Name = "PostPrelim";
             // 
             // button_Cancel
             // 
@@ -160,6 +135,24 @@
             this.button_ApplyChanges.Text = "Save Changes";
             this.button_ApplyChanges.UseVisualStyleBackColor = true;
             this.button_ApplyChanges.Click += new System.EventHandler(this.button_ApplyChanges_Click);
+            // 
+            // EncCondition
+            // 
+            this.EncCondition.HeaderText = "Encompass Condition";
+            this.EncCondition.Name = "EncCondition";
+            this.EncCondition.Width = 225;
+            // 
+            // BlendFollowUp
+            // 
+            this.BlendFollowUp.HeaderText = "Blend Follow-Up";
+            this.BlendFollowUp.Name = "BlendFollowUp";
+            this.BlendFollowUp.Width = 200;
+            // 
+            // EfolderName
+            // 
+            this.EfolderName.HeaderText = "Efolder Name";
+            this.EfolderName.Name = "EfolderName";
+            this.EfolderName.Width = 200;
             // 
             // ConditionsMapperTable_Form
             // 
@@ -190,12 +183,11 @@
         private System.Windows.Forms.PictureBox editCondition;
         private System.Windows.Forms.Button ViewJson_button;
         private System.Windows.Forms.DataGridView ConditionsDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EncCondition;
-        private System.Windows.Forms.DataGridViewTextBoxColumn BlendFollowUp;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EfolderName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn PostPrelim;
         private System.Windows.Forms.Button button_Cancel;
         private System.Windows.Forms.Button button_ApplyChanges;
         private System.Windows.Forms.PictureBox addCondition;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EncCondition;
+        private System.Windows.Forms.DataGridViewTextBoxColumn BlendFollowUp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EfolderName;
     }
 }

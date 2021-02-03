@@ -35,39 +35,29 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             mapConditionToEfolderCheckBox.Checked = condition.MapDocumentToEncompassEfolder;
 
             blendFollowUpTypeTextBox.Text = condition.BlendConditionName;
-            blendDocumentTypeTextBox.Text = condition.BlendDocumentType;
-            blendSystemFollowUpDescriptionTextBox.Text = condition.BlendSystemFollowUpContextDescription;
-
             uwConditionTemplateIdTextBox.Text = condition.EncompassUwConditionTemplateId;
-            postConditionOnBlendAppsCheckBox.Checked = condition.PostConditionOnBlendApplications;
         }
 
         private ConditionsMapperCondition MapUiChangesToCondition()
         {
+            if (TheCondition == null)
+            {
+                TheCondition = new ConditionsMapperCondition();
+            }
+
             TheCondition.EncompassConditionName = uwConditionNameTextBox.Text;
             TheCondition.EncompassEfolderName = eFolderName_textBox.Text;
             TheCondition.MapDocumentToEncompassEfolder = mapConditionToEfolderCheckBox.Checked;
 
             TheCondition.BlendConditionName = blendFollowUpTypeTextBox.Text;
-            TheCondition.BlendDocumentType = blendDocumentTypeTextBox.Text;
-            TheCondition.BlendSystemFollowUpContextDescription = blendSystemFollowUpDescriptionTextBox.Text;
-
             TheCondition.EncompassUwConditionTemplateId = uwConditionTemplateIdTextBox.Text;
-            TheCondition.PostConditionOnBlendApplications = postConditionOnBlendAppsCheckBox.Checked;
 
             return TheCondition;
         }
 
         private void ConditionsMapperEditCondition_Form_Load(object sender, EventArgs e)
         {
-            toolTipBlendFollowUpType.SetToolTip(blendFollowupHelpPictureBox, $"Optional: If there is a Blend Follow-Up Equivalent to this UW Condition 2 things will be accomplished: {Environment.NewLine + Environment.NewLine}" +
-                $"1. During Prelim Conditions, if the loan is a Blend App and that Follow-up did not fire, we will post our WCM Prelim Condition.{Environment.NewLine}" +
-                $"2. When Synching Blend conditions, we will map this Follow-Up to this Efolder.");
-
             toolTipBlendFollowUpType.SetToolTip(eFolderNameHelpPictureBox, $"Both prelim conditions and Blend Follow-Ups will be mapped to this eFolder.");
-            toolTipBlendFollowUpType.SetToolTip(blendFollowupSubNameHelpPictureBox, $"OPTIONAL: Some blend Follow-Ups are 'DocumentRequest' and the Document Type tells us the actual follow-up. i.e. \"Asset Statement\" is a 'DocRequest' Follow-Up and \"AssetStatement\" is document Type");
-            toolTipBlendFollowUpType.SetToolTip(blendSystemFollowUpDescriptionTextBox, $"OPTIONAL: Some blend Follow-Ups are 'System' and the 'Context' 'Description' property tells us the actual follow-up. i.e. \"Home Insurance\" is a 'System' Follow-Up and \"Home Insurance\" is the 'Context' 'Description' property");
-
         }
 
 
