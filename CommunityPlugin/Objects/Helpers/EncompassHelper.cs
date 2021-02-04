@@ -33,6 +33,33 @@ namespace CommunityPlugin.Objects.Helpers
             return EncompassApplication.Session.Loans.FieldDescriptors[FieldID].Description;
         }
 
+        public static UserPersonaBreakOut BreakOutUserPersona(User user)
+        {
+            UserPersonaBreakOut response = new UserPersonaBreakOut();
+
+            foreach (EllieMae.Encompass.BusinessObjects.Users.Persona p in user.Personas)
+            {
+                if (p.Name == "Loan Officer")
+                {
+                    response.isLo = true;
+                }
+                if (p.Name.ToLower().Contains("closer"))
+                {
+                    response.isCloser = true;
+                }
+                if (p.Name.ToLower().Contains("administrator"))
+                {
+                    response.isProcessor = true;
+                }
+                if (p.Name.ToLower().Contains("processor"))
+                {
+                    response.isAdmin = true;
+                }
+            }
+
+            return response;
+        }
+
         public static string LastPersona
         {
             get

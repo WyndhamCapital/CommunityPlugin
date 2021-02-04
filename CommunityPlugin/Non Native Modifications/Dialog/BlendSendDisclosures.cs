@@ -1,5 +1,7 @@
 ﻿using CommunityPlugin.Objects;
+using CommunityPlugin.Objects.Helpers;
 using CommunityPlugin.Objects.Interface;
+using CommunityPlugin.Objects.Models;
 using EllieMae.EMLite.UI;
 using EllieMae.EMLite.WebServices;
 using EllieMae.Encompass.Automation;
@@ -27,7 +29,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         Form emDialogForm;
         GridView DocumentGrid;
         string DocumentGridControlId = "gvDocuments";
-        bool isPersonaAdminOrProcessor = false;
+        UserPersonaBreakOut PersonaBreakOut;
 
         public override bool Authorized()
         {
@@ -36,27 +38,10 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         public override void Login(object sender, EventArgs e)
         {
-            isPersonaAdminOrProcessor = IsPersonaProcessorOrAdmin();
+            PersonaBreakOut = EncompassHelper.BreakOutUserPersona(EncompassApplication.CurrentUser);
             FormWrapper.FormOpened += FormWrapper_FormOpened;
         }
 
-        private bool IsPersonaProcessorOrAdmin()
-        {
-            foreach (EllieMae.Encompass.BusinessObjects.Users.Persona p in EncompassApplication.CurrentUser.Personas)
-            {
-     
-                if (p.Name.ToLower().Contains("administrator"))
-                {
-                    return true;
-                }
-                if (p.Name.ToLower().Contains("processor"))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         private void FormWrapper_FormOpened(object sender, Objects.Args.FormOpenedArgs e)
         {
@@ -66,7 +51,10 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                 {
                     case "formselectiondialog":
                         this.emDialogForm = openForm;
-                        HideKmSendDisclosuresButton();
+                        if (PersonaBreakOut.isAdmin == false)
+                        {
+                            HideKmSendDisclosuresButton();
+                        }
 
                         // SP 09/20 -- Uncomment here to inject WCM button
                         //InjectWcmSendDisclosuresButton();
@@ -79,7 +67,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
             if (e.OpenForm.Name.Equals("efolderdialog", StringComparison.OrdinalIgnoreCase))
             {
-                if (isPersonaAdminOrProcessor == false)
+                if (PersonaBreakOut.isAdmin == false && PersonaBreakOut.isProcessor == false)
                 {
                     this.HideKmRetreiveBlendDocsButton(e.OpenForm);
                 }
