@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29509.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunityPlugin", "CommunityPlugin\CommunityPlugin.csproj", "{53BEE5EC-C6E7-43F9-B6EC-0366A3A372D7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WyndhamLib.Authentication", "..\platform\src\WyndhamLib.Authentication\WyndhamLib.Authentication.csproj", "{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{53BEE5EC-C6E7-43F9-B6EC-0366A3A372D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53BEE5EC-C6E7-43F9-B6EC-0366A3A372D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53BEE5EC-C6E7-43F9-B6EC-0366A3A372D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

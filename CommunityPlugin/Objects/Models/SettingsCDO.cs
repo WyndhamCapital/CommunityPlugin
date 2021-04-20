@@ -22,5 +22,8 @@ namespace CommunityPlugin.Objects.Models
 
         [JsonProperty("Plugins")]
         public Dictionary<string, PluginSettings> Plugins { get; set; }
+
+        [JsonProperty("WcmSettings")]
+        public WcmSettings WcmSettings { get; set; }
     }
 }

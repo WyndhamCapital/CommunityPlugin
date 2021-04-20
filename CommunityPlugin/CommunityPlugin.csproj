@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="Non Native Modifications\Dialog\BlendSendDisclosures.cs" />
     <Compile Include="Non Native Modifications\Dialog\ConditionsManagerInUwCondition.cs" />
+    <Compile Include="Non Native Modifications\Dialog\HighlightImportedDocsEfolderDialog.cs" />
     <Compile Include="Non Native Modifications\DisableServices.cs" />
     <Compile Include="Non Native Modifications\FormWrapper.cs" />
     <Compile Include="Non Native Modifications\GridSearch.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="Objects\Helpers\CDOHelper.cs" />
     <Compile Include="Objects\Helpers\EncompassHelper.cs" />
     <Compile Include="Objects\Helpers\FilterCDOHelper.cs" />
+    <Compile Include="Objects\Helpers\LoanCdoHelper.cs" />
     <Compile Include="Objects\Helpers\PipelineFilterCDO.cs" />
     <Compile Include="Objects\Helpers\PipelineFilterCDORoot.cs" />
     <Compile Include="Objects\Helpers\Reflect.cs" />
@@ -410,7 +412,14 @@
     <Compile Include="Objects\Models\SearchResult.cs" />
     <Compile Include="Objects\Models\SearchResultField.cs" />
     <Compile Include="Objects\Models\SettingsCDO.cs" />
+    <Compile Include="Objects\Models\UserPersonaBreakOut.cs" />
     <Compile Include="Objects\Models\VIPRoot.cs" />
+    <Compile Include="Objects\Models\WcmSettings.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\DocumentColorTypeEnum.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\ExternalSource.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocument.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocumentsLoanCdo.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\MetaDataExporting.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
@@ -513,6 +522,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Forward.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\platform\src\WyndhamLib.Authentication\WyndhamLib.Authentication.csproj">
+      <Project>{19eca2d5-1bb7-4b1e-bc73-ec314362e582}</Project>
+      <Name>WyndhamLib.Authentication</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
