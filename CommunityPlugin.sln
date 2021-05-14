@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunityPlugin", "Communit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WyndhamLib.Authentication", "..\platform\src\WyndhamLib.Authentication\WyndhamLib.Authentication.csproj", "{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WyndhamLibGlobal", "..\Platform\src\WyndhamLibGlobal\WyndhamLibGlobal.csproj", "{EEAC546F-9894-435B-94EA-3223F34A4D09}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19ECA2D5-1BB7-4B1E-BC73-EC314362E582}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEAC546F-9894-435B-94EA-3223F34A4D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEAC546F-9894-435B-94EA-3223F34A4D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEAC546F-9894-435B-94EA-3223F34A4D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEAC546F-9894-435B-94EA-3223F34A4D09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
