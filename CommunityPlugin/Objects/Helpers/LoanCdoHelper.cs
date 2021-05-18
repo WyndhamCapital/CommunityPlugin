@@ -36,5 +36,12 @@ namespace CommunityPlugin.Objects.Helpers
             return obj;
         }
 
+        public static void SaveObjectToJsonCDO(Loan loan, string cdoName, Object obj)
+        {
+            string output = JsonConvert.SerializeObject(obj, Newtonsoft.Json.Formatting.Indented);
+            byte[] bytes = Encoding.UTF8.GetBytes(output);
+            EllieMae.Encompass.BusinessObjects.DataObject dataObj = new EllieMae.Encompass.BusinessObjects.DataObject(bytes);
+            loan.SaveCustomDataObject(cdoName, dataObj);
+        }
     }
 }

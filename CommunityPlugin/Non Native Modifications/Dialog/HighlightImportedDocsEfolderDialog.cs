@@ -30,7 +30,11 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
     {
         private Dictionary<int, ExternalSource> _externalSourcesDictionary = null;
         private static readonly WcmSettings WcmSettings = CDOHelper.CDO.CommunitySettings.WcmSettings;
+        private static readonly string ImportedDocsLoanCdoName = "WCM.DocumentImporterDocs.json";
+
+        TrackedDoc TrackedDocLastUpdated = new TrackedDoc();
         public ImportedDocumentsLoanCdo ImportedDocsLoanCdo = null;
+
 
         public override bool Authorized()
         {
@@ -53,7 +57,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
             {
                 ImportedDocsLoanCdo =
                     LoanCdoHelper.GetLoanCustomDataObjectValue<ImportedDocumentsLoanCdo>(EncompassApplication.CurrentLoan,
-                        "WCM.DocumentImporterDocs.json");
+                        ImportedDocsLoanCdoName);
             });
 
         }
@@ -108,16 +112,58 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
             var currentAttachmentGuids = attachmentList.Select(x => x.Name).ToList();
 
+            List<string> attachmentGuidsThatStillNeedHighlighting = 
+                importedAttachmentGuids
+                .Intersect(currentAttachmentGuids)
+                .ToList();
 
-            List<string> duplicates = importedAttachmentGuids.Intersect(currentAttachmentGuids).ToList();
-            if (duplicates.Any() == false)
+            if (attachmentGuidsThatStillNeedHighlighting.Any() == false)
             {
-                // if there are no duplicates, go update the cdo so that any docs where tracked doc
-                // is this guid, set enable highlight to FALSE. 
+                // SP - when 1 file attachment moves to a new tracked doc
+                // there will be multiple events thrown for every property that is updated
+                // i.e. received date, receieved user, etc will all get an event thrown
 
+                // checks if this is the same tracked doc we just updated last time
+                var currentTrackedDoc = new TrackedDoc(trackedDocumemnt.ID, currentAttachmentGuids);
+                if (HasTrackedDocumentChanged(currentTrackedDoc))
+                {
+                    // if there are no duplicates, go update the cdo so that any docs where tracked doc
+                    // is this guid, set enable highlight to FALSE. 
+                    UnhighlightImportedDocumentsLoanCdo(trackedDocumemnt);
 
-
+                    TrackedDocLastUpdated = currentTrackedDoc;
+                }
             }
+        }
+
+        private bool HasTrackedDocumentChanged(TrackedDoc trackedDocumemnt)
+        {
+            if(TrackedDocLastUpdated == null) { return true; }
+
+            if (trackedDocumemnt.Equals(TrackedDocLastUpdated))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            } 
+        }
+
+        private void UnhighlightImportedDocumentsLoanCdo(TrackedDocument trackedDocumemnt)
+        {
+
+            // set 'enable highlighting' to false for docs in this tracked doc
+            ImportedDocsLoanCdo.Documents
+                .Where(x => string.IsNullOrEmpty(x.EncompassEfolderId) == false 
+                && x.EncompassEfolderId == trackedDocumemnt.ID)
+                .ToList().ForEach(x => x.EnableHighlighting = false);
+
+
+            LoanCdoHelper.SaveObjectToJsonCDO(
+                EncompassApplication.CurrentLoan, 
+                ImportedDocsLoanCdoName,
+               ImportedDocsLoanCdo);
         }
 
         private void GetExternalSources()
@@ -207,6 +253,10 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
                 foreach (var importedDocument in ImportedDocsLoanCdo.Documents)
                 {
+                    // SP - we only need to highlight docs where enabled is set to T
+                    if (importedDocument.EnableHighlighting == false)
+                        continue;
+                    
                     var matchingEfolderDoc =
                         documentDictionary
                             .FirstOrDefault(x => x.Value.Guid.Equals(importedDocument.EncompassEfolderId));
@@ -242,7 +292,6 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
 
         }
-
 
         private void HighlightFilesUnassigned(Form documentDialogForm)
         {
@@ -385,7 +434,6 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                 File.WriteAllText(fileName, output);
             }
         }
-
         private void ExportTableLaoutColumnSelectorControls(Form openForm)
         {
             var controls = openForm.Controls;

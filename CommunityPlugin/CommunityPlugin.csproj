@@ -442,6 +442,7 @@
     <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocument.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocumentsLoanCdo.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\MetaDataExporting.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\TrackedDoc.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
