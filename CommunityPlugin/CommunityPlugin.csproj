@@ -283,23 +283,23 @@
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper.cs" />
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.cs">
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_EditCondition_Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.Designer.cs">
-      <DependentUpon>ConditionsMapperEditCondition_Form.cs</DependentUpon>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_EditCondition_Form.Designer.cs">
+      <DependentUpon>ConditionsMapper_EditCondition_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.cs">
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_Table_Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.Designer.cs">
-      <DependentUpon>ConditionsMapperTable_Form.cs</DependentUpon>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_Table_Form.Designer.cs">
+      <DependentUpon>ConditionsMapper_Table_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.cs">
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_SelectPrelimCondition_Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.Designer.cs">
-      <DependentUpon>ConditionsMapperSelectPrelimCondition_Form.cs</DependentUpon>
+    <Compile Include="Non Native Modifications\TopMenu\ConditionsMapper_SelectPrelimCondition_Form.Designer.cs">
+      <DependentUpon>ConditionsMapper_SelectPrelimCondition_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields.cs" />
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.cs">
@@ -307,6 +307,19 @@
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.Designer.cs">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DocumentMapper.cs" />
+    <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.Designer.cs">
+      <DependentUpon>DocumentMapper_SingleDoc_Form.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_Table_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_Table_Form.Designer.cs">
+      <DependentUpon>DocumentMapper_Table_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Non Native Modifications\TopMenu\PasteLoanNumbers_Dialog.cs">
       <SubType>UserControl</SubType>
@@ -366,6 +379,7 @@
     <Compile Include="Objects\Helpers\AutoMailerCDO.cs" />
     <Compile Include="Objects\Helpers\CDOHelper.cs" />
     <Compile Include="Objects\Helpers\EncompassHelper.cs" />
+    <Compile Include="Objects\Helpers\ExtensionMethods.cs" />
     <Compile Include="Objects\Helpers\FilterCDOHelper.cs" />
     <Compile Include="Objects\Helpers\LoanCdoHelper.cs" />
     <Compile Include="Objects\Helpers\PipelineFilterCDO.cs" />
@@ -373,6 +387,7 @@
     <Compile Include="Objects\Helpers\Reflect.cs" />
     <Compile Include="Objects\Helpers\RuleCDOHelper.cs" />
     <Compile Include="Objects\Helpers\VIPCDO.cs" />
+    <Compile Include="Objects\Helpers\WcmHelpers.cs" />
     <Compile Include="Objects\Interface\AbstractControlDescriptionProvider.cs" />
     <Compile Include="Objects\Interface\IAnalysisBase.cs" />
     <Compile Include="Objects\Interface\IBeforeCommit.cs" />
@@ -443,6 +458,9 @@
     <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocumentsLoanCdo.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\MetaDataExporting.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\TrackedDoc.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentMapper\Document.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentMapper\ExternalDocumentSource.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentMapper\FieldData.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
@@ -497,17 +515,23 @@
     <EmbeddedResource Include="Non Native Modifications\TopMenu\AutoMailer_Form.resx">
       <DependentUpon>AutoMailer_Form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperEditCondition_Form.resx">
-      <DependentUpon>ConditionsMapperEditCondition_Form.cs</DependentUpon>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapper_EditCondition_Form.resx">
+      <DependentUpon>ConditionsMapper_EditCondition_Form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperSelectPrelimCondition_Form.resx">
-      <DependentUpon>ConditionsMapperSelectPrelimCondition_Form.cs</DependentUpon>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapper_SelectPrelimCondition_Form.resx">
+      <DependentUpon>ConditionsMapper_SelectPrelimCondition_Form.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapperTable_Form.resx">
-      <DependentUpon>ConditionsMapperTable_Form.cs</DependentUpon>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\ConditionsMapper_Table_Form.resx">
+      <DependentUpon>ConditionsMapper_Table_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.resx">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.resx">
+      <DependentUpon>DocumentMapper_SingleDoc_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\TopMenu\DocumentMapper_Table_Form.resx">
+      <DependentUpon>DocumentMapper_Table_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\PasteLoanNumbers_Dialog.resx">
       <DependentUpon>PasteLoanNumbers_Dialog.cs</DependentUpon>

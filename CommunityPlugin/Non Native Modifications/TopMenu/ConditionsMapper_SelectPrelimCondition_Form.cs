@@ -15,12 +15,12 @@ using CommunityPlugin.Objects.Helpers;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public partial class ConditionsMapperSelectPrelimCondition_Form : Form
+    public partial class ConditionsMapper_SelectPrelimCondition_Form : Form
     {
 
         public AutomedPrelimCondition ConditionSelected = null;
 
-        public ConditionsMapperSelectPrelimCondition_Form()
+        public ConditionsMapper_SelectPrelimCondition_Form()
         {
             InitializeComponent();
         }

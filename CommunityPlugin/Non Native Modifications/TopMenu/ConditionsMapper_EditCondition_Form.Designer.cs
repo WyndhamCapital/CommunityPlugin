@@ -1,6 +1,6 @@
 ﻿namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    partial class ConditionsMapperEditCondition_Form
+    partial class ConditionsMapper_EditCondition_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapperEditCondition_Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapper_EditCondition_Form));
             this.panel2 = new System.Windows.Forms.Panel();
             this.postConditionOnBlendAppsCheckBox = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -70,43 +70,48 @@
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.uwConditionNameTextBox);
             this.panel2.Controls.Add(this.label3);
-            this.panel2.Location = new System.Drawing.Point(13, 51);
+            this.panel2.Location = new System.Drawing.Point(17, 63);
+            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(393, 97);
+            this.panel2.Size = new System.Drawing.Size(523, 119);
             this.panel2.TabIndex = 17;
             // 
             // postConditionOnBlendAppsCheckBox
             // 
             this.postConditionOnBlendAppsCheckBox.AutoSize = true;
-            this.postConditionOnBlendAppsCheckBox.Location = new System.Drawing.Point(124, 71);
+            this.postConditionOnBlendAppsCheckBox.Location = new System.Drawing.Point(165, 87);
+            this.postConditionOnBlendAppsCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.postConditionOnBlendAppsCheckBox.Name = "postConditionOnBlendAppsCheckBox";
-            this.postConditionOnBlendAppsCheckBox.Size = new System.Drawing.Size(221, 17);
+            this.postConditionOnBlendAppsCheckBox.Size = new System.Drawing.Size(292, 21);
             this.postConditionOnBlendAppsCheckBox.TabIndex = 20;
             this.postConditionOnBlendAppsCheckBox.Text = "Post Prelim Condition On ALL Blend Apps";
             this.postConditionOnBlendAppsCheckBox.UseVisualStyleBackColor = true;
             // 
             // label2
             // 
-            this.label2.Location = new System.Drawing.Point(2, 47);
+            this.label2.Location = new System.Drawing.Point(3, 58);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(122, 26);
+            this.label2.Size = new System.Drawing.Size(163, 32);
             this.label2.TabIndex = 19;
             this.label2.Text = "Encompass UW Condition Template ID";
             // 
             // uwConditionTemplateIdTextBox
             // 
-            this.uwConditionTemplateIdTextBox.Location = new System.Drawing.Point(124, 48);
+            this.uwConditionTemplateIdTextBox.Location = new System.Drawing.Point(165, 59);
+            this.uwConditionTemplateIdTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uwConditionTemplateIdTextBox.Name = "uwConditionTemplateIdTextBox";
             this.uwConditionTemplateIdTextBox.ReadOnly = true;
-            this.uwConditionTemplateIdTextBox.Size = new System.Drawing.Size(254, 20);
+            this.uwConditionTemplateIdTextBox.Size = new System.Drawing.Size(337, 22);
             this.uwConditionTemplateIdTextBox.TabIndex = 18;
             // 
             // addPrelimCondition
             // 
             this.addPrelimCondition.Image = ((System.Drawing.Image)(resources.GetObject("addPrelimCondition.Image")));
-            this.addPrelimCondition.Location = new System.Drawing.Point(350, 16);
+            this.addPrelimCondition.Location = new System.Drawing.Point(467, 20);
+            this.addPrelimCondition.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.addPrelimCondition.Name = "addPrelimCondition";
-            this.addPrelimCondition.Size = new System.Drawing.Size(28, 28);
+            this.addPrelimCondition.Size = new System.Drawing.Size(37, 34);
             this.addPrelimCondition.TabIndex = 13;
             this.addPrelimCondition.TabStop = false;
             this.addPrelimCondition.Click += new System.EventHandler(this.addPrelimCondition_Click);
@@ -114,45 +119,50 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(2, 27);
+            this.label6.Location = new System.Drawing.Point(3, 33);
+            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(104, 13);
+            this.label6.Size = new System.Drawing.Size(135, 17);
             this.label6.TabIndex = 9;
             this.label6.Text = "UW Condition Name";
             // 
             // uwConditionNameTextBox
             // 
-            this.uwConditionNameTextBox.Location = new System.Drawing.Point(124, 24);
+            this.uwConditionNameTextBox.Location = new System.Drawing.Point(165, 30);
+            this.uwConditionNameTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.uwConditionNameTextBox.Name = "uwConditionNameTextBox";
             this.uwConditionNameTextBox.ReadOnly = true;
-            this.uwConditionNameTextBox.Size = new System.Drawing.Size(220, 20);
+            this.uwConditionNameTextBox.Size = new System.Drawing.Size(292, 22);
             this.uwConditionNameTextBox.TabIndex = 8;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(3, 4);
+            this.label3.Location = new System.Drawing.Point(4, 5);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(98, 13);
+            this.label3.Size = new System.Drawing.Size(126, 17);
             this.label3.TabIndex = 0;
             this.label3.Text = "Prelim Condition";
             // 
             // eFolderNameHelpPictureBox
             // 
             this.eFolderNameHelpPictureBox.Image = ((System.Drawing.Image)(resources.GetObject("eFolderNameHelpPictureBox.Image")));
-            this.eFolderNameHelpPictureBox.Location = new System.Drawing.Point(347, 22);
+            this.eFolderNameHelpPictureBox.Location = new System.Drawing.Point(463, 27);
+            this.eFolderNameHelpPictureBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.eFolderNameHelpPictureBox.Name = "eFolderNameHelpPictureBox";
-            this.eFolderNameHelpPictureBox.Size = new System.Drawing.Size(23, 20);
+            this.eFolderNameHelpPictureBox.Size = new System.Drawing.Size(31, 25);
             this.eFolderNameHelpPictureBox.TabIndex = 21;
             this.eFolderNameHelpPictureBox.TabStop = false;
             // 
             // mapConditionToEfolderCheckBox
             // 
             this.mapConditionToEfolderCheckBox.AutoSize = true;
-            this.mapConditionToEfolderCheckBox.Location = new System.Drawing.Point(125, 41);
+            this.mapConditionToEfolderCheckBox.Location = new System.Drawing.Point(167, 50);
+            this.mapConditionToEfolderCheckBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.mapConditionToEfolderCheckBox.Name = "mapConditionToEfolderCheckBox";
-            this.mapConditionToEfolderCheckBox.Size = new System.Drawing.Size(170, 17);
+            this.mapConditionToEfolderCheckBox.Size = new System.Drawing.Size(221, 21);
             this.mapConditionToEfolderCheckBox.TabIndex = 15;
             this.mapConditionToEfolderCheckBox.Text = "Map Condition Docs to Efolder";
             this.mapConditionToEfolderCheckBox.UseVisualStyleBackColor = true;
@@ -160,24 +170,27 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 22);
+            this.label4.Location = new System.Drawing.Point(4, 27);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(75, 13);
+            this.label4.Size = new System.Drawing.Size(99, 17);
             this.label4.TabIndex = 11;
             this.label4.Text = "Efolder Name*";
             // 
             // eFolderName_textBox
             // 
-            this.eFolderName_textBox.Location = new System.Drawing.Point(125, 19);
+            this.eFolderName_textBox.Location = new System.Drawing.Point(167, 23);
+            this.eFolderName_textBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.eFolderName_textBox.Name = "eFolderName_textBox";
-            this.eFolderName_textBox.Size = new System.Drawing.Size(219, 20);
+            this.eFolderName_textBox.Size = new System.Drawing.Size(291, 22);
             this.eFolderName_textBox.TabIndex = 10;
             // 
             // button_Cancel
             // 
-            this.button_Cancel.Location = new System.Drawing.Point(315, 314);
+            this.button_Cancel.Location = new System.Drawing.Point(420, 386);
+            this.button_Cancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button_Cancel.Name = "button_Cancel";
-            this.button_Cancel.Size = new System.Drawing.Size(90, 33);
+            this.button_Cancel.Size = new System.Drawing.Size(120, 41);
             this.button_Cancel.TabIndex = 20;
             this.button_Cancel.Text = "Cancel";
             this.button_Cancel.UseVisualStyleBackColor = true;
@@ -185,9 +198,10 @@
             // 
             // button_ApplyChanges
             // 
-            this.button_ApplyChanges.Location = new System.Drawing.Point(219, 314);
+            this.button_ApplyChanges.Location = new System.Drawing.Point(292, 386);
+            this.button_ApplyChanges.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.button_ApplyChanges.Name = "button_ApplyChanges";
-            this.button_ApplyChanges.Size = new System.Drawing.Size(90, 33);
+            this.button_ApplyChanges.Size = new System.Drawing.Size(120, 41);
             this.button_ApplyChanges.TabIndex = 19;
             this.button_ApplyChanges.Text = "Apply";
             this.button_ApplyChanges.UseVisualStyleBackColor = true;
@@ -200,44 +214,49 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.blendFollowUpTypeTextBox);
-            this.panel1.Location = new System.Drawing.Point(13, 157);
+            this.panel1.Location = new System.Drawing.Point(17, 193);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(393, 74);
+            this.panel1.Size = new System.Drawing.Size(523, 91);
             this.panel1.TabIndex = 0;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(3, 3);
+            this.label9.Location = new System.Drawing.Point(4, 4);
+            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(89, 13);
+            this.label9.Size = new System.Drawing.Size(113, 17);
             this.label9.TabIndex = 23;
             this.label9.Text = "Blend Settings";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(125, 45);
+            this.label1.Location = new System.Drawing.Point(167, 55);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label1.Size = new System.Drawing.Size(197, 13);
+            this.label1.Size = new System.Drawing.Size(260, 17);
             this.label1.TabIndex = 27;
             this.label1.Text = "must match EXACT Blend follow-up type";
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(4, 28);
+            this.label7.Location = new System.Drawing.Point(5, 34);
+            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(108, 30);
+            this.label7.Size = new System.Drawing.Size(144, 37);
             this.label7.TabIndex = 26;
             this.label7.Text = "Blend Follow-Up";
             // 
             // blendFollowUpTypeTextBox
             // 
-            this.blendFollowUpTypeTextBox.Location = new System.Drawing.Point(125, 25);
+            this.blendFollowUpTypeTextBox.Location = new System.Drawing.Point(167, 31);
+            this.blendFollowUpTypeTextBox.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.blendFollowUpTypeTextBox.Name = "blendFollowUpTypeTextBox";
-            this.blendFollowUpTypeTextBox.Size = new System.Drawing.Size(220, 20);
+            this.blendFollowUpTypeTextBox.Size = new System.Drawing.Size(292, 22);
             this.blendFollowUpTypeTextBox.TabIndex = 25;
             // 
             // panel3
@@ -248,37 +267,40 @@
             this.panel3.Controls.Add(this.label8);
             this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.mapConditionToEfolderCheckBox);
-            this.panel3.Location = new System.Drawing.Point(13, 239);
+            this.panel3.Location = new System.Drawing.Point(17, 294);
+            this.panel3.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(393, 66);
+            this.panel3.Size = new System.Drawing.Size(523, 81);
             this.panel3.TabIndex = 21;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(4, 3);
+            this.label8.Location = new System.Drawing.Point(5, 4);
+            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 13);
+            this.label8.Size = new System.Drawing.Size(66, 17);
             this.label8.TabIndex = 22;
             this.label8.Text = "Efolder*";
             // 
             // label10
             // 
-            this.label10.Location = new System.Drawing.Point(12, 14);
+            this.label10.Location = new System.Drawing.Point(16, 17);
+            this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
             this.label10.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.label10.Size = new System.Drawing.Size(394, 34);
+            this.label10.Size = new System.Drawing.Size(525, 42);
             this.label10.TabIndex = 32;
             this.label10.Text = "Only 1 section is required from either \"Prelim Condition\" or \"Blend Settings\"\'Con" +
     "dition/Follow-Up can have both sections. ";
             this.label10.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // ConditionsMapperEditCondition_Form
+            // ConditionsMapper_EditCondition_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(419, 357);
+            this.ClientSize = new System.Drawing.Size(559, 439);
             this.Controls.Add(this.label10);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
@@ -286,7 +308,8 @@
             this.Controls.Add(this.button_ApplyChanges);
             this.Controls.Add(this.panel2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ConditionsMapperEditCondition_Form";
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Name = "ConditionsMapper_EditCondition_Form";
             this.Text = "Update Blend Condition Mapping";
             this.Load += new System.EventHandler(this.ConditionsMapperEditCondition_Form_Load);
             this.panel2.ResumeLayout(false);

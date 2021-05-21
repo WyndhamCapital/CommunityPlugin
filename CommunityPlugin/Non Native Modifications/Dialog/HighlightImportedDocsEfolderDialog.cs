@@ -112,7 +112,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
             var currentAttachmentGuids = attachmentList.Select(x => x.Name).ToList();
 
-            List<string> attachmentGuidsThatStillNeedHighlighting = 
+            List<string> attachmentGuidsThatStillNeedHighlighting =
                 importedAttachmentGuids
                 .Intersect(currentAttachmentGuids)
                 .ToList();
@@ -138,7 +138,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         private bool HasTrackedDocumentChanged(TrackedDoc trackedDocumemnt)
         {
-            if(TrackedDocLastUpdated == null) { return true; }
+            if (TrackedDocLastUpdated == null) { return true; }
 
             if (trackedDocumemnt.Equals(TrackedDocLastUpdated))
             {
@@ -147,7 +147,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
             else
             {
                 return true;
-            } 
+            }
         }
 
         private void UnhighlightImportedDocumentsLoanCdo(TrackedDocument trackedDocumemnt)
@@ -155,48 +155,45 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
             // set 'enable highlighting' to false for docs in this tracked doc
             ImportedDocsLoanCdo.Documents
-                .Where(x => string.IsNullOrEmpty(x.EncompassEfolderId) == false 
+                .Where(x => string.IsNullOrEmpty(x.EncompassEfolderId) == false
                 && x.EncompassEfolderId == trackedDocumemnt.ID)
                 .ToList().ForEach(x => x.EnableHighlighting = false);
 
 
             LoanCdoHelper.SaveObjectToJsonCDO(
-                EncompassApplication.CurrentLoan, 
+                EncompassApplication.CurrentLoan,
                 ImportedDocsLoanCdoName,
                ImportedDocsLoanCdo);
         }
 
         private void GetExternalSources()
         {
-            Task taxTask = new TaskFactory().StartNew(async () =>
+            try
             {
-                string url = WcmSettings.GetDocumentImporterSourcesUrl;
-                HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(url);
-                var rawJson = await httpResponse.Content.ReadAsStringAsync();
-                if (httpResponse.IsSuccessStatusCode)
+                Task task = new TaskFactory().StartNew(async () =>
                 {
-                    var externalImportSources = JsonConvert.DeserializeObject<List<ExternalSource>>(rawJson);
+                    List<ExternalSource> response = await WcmHelpers.GetDocumentImporterExternalSourcesAsync(WcmSettings);
 
-                    _externalSourcesDictionary = externalImportSources.ToDictionary(x => x.Id, x => x);
-                }
-                else
+                    _externalSourcesDictionary = response.ToDictionary(x => x.Id, x => x);
+
+                }).ContinueWith((x) =>
                 {
-                    Macro.Alert($"Major error getting Document Importer Settings. " +
-                                "Please restart Encompass and if the error persists submit a help desk ticket. " +
-                                $"{Environment.NewLine}{Environment.NewLine}Status Code: '{httpResponse.StatusCode}'");
-                }
+                    if (_externalSourcesDictionary != null)
+                    {
+                        foreach (var externalSource in _externalSourcesDictionary)
+                        {
+                            externalSource.Value.AlreadyViewedDocumentColor = ColorTranslator.FromHtml($"#{externalSource.Value.AlreadyViewedDocHexColor}");
+                            externalSource.Value.NewDocumentColor = ColorTranslator.FromHtml($"#{externalSource.Value.NewDocumentHexColor}");
 
-
-            }).ContinueWith((x) =>
+                        }
+                    }
+                });
+            }
+            catch (Exception e)
             {
 
-                foreach (var externalSource in _externalSourcesDictionary)
-                {
-                    externalSource.Value.AlreadyViewedDocumentColor = ColorTranslator.FromHtml($"#{externalSource.Value.AlreadyViewedDocHexColor}");
-                    externalSource.Value.NewDocumentColor = ColorTranslator.FromHtml($"#{externalSource.Value.NewDocumentHexColor}");
-
-                }
-            });
+                Macro.Alert($"Error: {e.ToString()}");
+            }
         }
 
         private void FormWrapper_FormOpened(object sender, FormOpenedArgs e)
@@ -256,7 +253,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                     // SP - we only need to highlight docs where enabled is set to T
                     if (importedDocument.EnableHighlighting == false)
                         continue;
-                    
+
                     var matchingEfolderDoc =
                         documentDictionary
                             .FirstOrDefault(x => x.Value.Guid.Equals(importedDocument.EncompassEfolderId));
