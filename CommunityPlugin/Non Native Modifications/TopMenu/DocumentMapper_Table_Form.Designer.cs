@@ -38,6 +38,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.documentsDataGridView = new System.Windows.Forms.DataGridView();
             this.searchTextBox = new System.Windows.Forms.TextBox();
             this.addNewDocument = new System.Windows.Forms.PictureBox();
+            this.enabledOnlyDocsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.documentsDataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.addNewDocument)).BeginInit();
             this.SuspendLayout();
@@ -66,6 +67,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             // 
             // searchTextBox
             // 
+            this.searchTextBox.Enabled = false;
             this.searchTextBox.Location = new System.Drawing.Point(13, 53);
             this.searchTextBox.Name = "searchTextBox";
             this.searchTextBox.Size = new System.Drawing.Size(321, 22);
@@ -83,11 +85,24 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.addNewDocument.TabStop = false;
             this.addNewDocument.Click += new System.EventHandler(this.addNewDocument_Click);
             // 
+            // enabledOnlyDocsCheckBox
+            // 
+            this.enabledOnlyDocsCheckBox.AutoSize = true;
+            this.enabledOnlyDocsCheckBox.Enabled = false;
+            this.enabledOnlyDocsCheckBox.Location = new System.Drawing.Point(341, 53);
+            this.enabledOnlyDocsCheckBox.Name = "enabledOnlyDocsCheckBox";
+            this.enabledOnlyDocsCheckBox.Size = new System.Drawing.Size(143, 20);
+            this.enabledOnlyDocsCheckBox.TabIndex = 4;
+            this.enabledOnlyDocsCheckBox.Text = "Enabled Only Docs";
+            this.enabledOnlyDocsCheckBox.UseVisualStyleBackColor = true;
+            this.enabledOnlyDocsCheckBox.CheckedChanged += new System.EventHandler(this.enabledOnlyDocsCheckBox_CheckedChanged);
+            // 
             // DocumentMapper_Table_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(908, 438);
+            this.Controls.Add(this.enabledOnlyDocsCheckBox);
             this.Controls.Add(this.addNewDocument);
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.documentsDataGridView);
@@ -110,5 +125,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private System.Windows.Forms.DataGridView documentsDataGridView;
         private System.Windows.Forms.TextBox searchTextBox;
         private System.Windows.Forms.PictureBox addNewDocument;
+        private System.Windows.Forms.CheckBox enabledOnlyDocsCheckBox;
     }
 }

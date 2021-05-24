@@ -44,9 +44,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         }
 
 
-        public static List<Document> GetMapperDocuments(ExternalDocumentSource sourceToRetrieve)
+        public List<Document> GetMapperDocuments(ExternalDocumentSource sourceToRetrieve)
         {
-            string finalUri = $"{WcmSettings.GetDocumentMapperDocumentsUrl}?externalSourceId={sourceToRetrieve.Id}&includeFieldMappings=true&enabledOnlyDocs=false";
+            string finalUri = $"{WcmSettings.GetDocumentMapperDocumentsUrl}?externalSourceId={sourceToRetrieve.Id}&includeFieldMappings=true&enabledOnlyDocs={false}";
             HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(finalUri);
 
             if (httpResponse.IsSuccessStatusCode)
@@ -89,8 +89,15 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 
             List<Document> docs = GetMapperDocuments(selectedSource);
 
-            UpdateDocsGridview(docs);
 
+            UpdateDocsGridview(docs);
+            EnableControls();
+        }
+
+        private void EnableControls()
+        {
+            searchTextBox.Enabled = true;
+            enabledOnlyDocsCheckBox.Enabled = true;
         }
 
         private ExternalDocumentSource GetExternalSourceSelected()
@@ -163,19 +170,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void searchTextBox_TextChanged(object sender, EventArgs e)
         {
-            string searchWord = searchTextBox.Text.ToLower();
-            if (string.IsNullOrEmpty(searchWord))
-            {
-                UpdateDocsGridview(MapperDocuments);
-            }
-            else
-            {
-                var docs = MapperDocuments
-                    .Where(x => x.EncompassEfolderName.ToLower().Contains(searchWord) ||
-                    x.ExternalSystemDocumentId.ToLower().Contains(searchWord)).ToList();
-
-                UpdateDocsGridview(docs);
-            }
+            var docs = SearchDocs();
+            UpdateDocsGridview(docs);
         }
 
         private void documentsDataGridView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -197,14 +193,12 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 return;
             }
 
-            using (var editDocForm = new DocumentMapper_SingleDoc_Form(selectedDoc))
+            using (var editDocForm = new DocumentMapper_SingleDoc_Form(selectedDoc, WcmSettings))
             {
                 if (editDocForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
                     return;
 
-                Document updatedDoc = UpdateDocumentMapperDoc(editDocForm.TheDocument);
-
-                this.UpdateDocumentInGridview(updatedDoc);
+                this.UpdateDocumentInGridview(editDocForm.TheDocument);
             }
 
 
@@ -256,33 +250,40 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 return;
             }
 
-            using (var editDocForm = new DocumentMapper_SingleDoc_Form(sourceSelected.Id))
+            using (var editDocForm = new DocumentMapper_SingleDoc_Form(sourceSelected.Id, WcmSettings))
             {
                 if (editDocForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
                     return;
 
-                //
-                Document updatedDoc = UpdateDocumentMapperDoc(editDocForm.TheDocument);
-                this.UpdateDocumentInGridview(updatedDoc);
+                this.UpdateDocumentInGridview(editDocForm.TheDocument);
             }
         }
 
-        private Document UpdateDocumentMapperDoc(Document theDocument)
+        private void enabledOnlyDocsCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            string url = $"{WcmSettings.UpdateDocumentMapperDocumentUrl}?userId={EncompassApplication.CurrentUser.ID}";
-            string json = JsonConvert.SerializeObject(theDocument);
+            var docs = SearchDocs();
+            UpdateDocsGridview(docs);
+        }
 
-            var httpResponse = WyndhamClientManager.GetAuthHttpClient().Post(url, theDocument);
-            if (httpResponse.IsSuccessStatusCode)
+        private List<Document> SearchDocs()
+        {
+            List<Document> response = MapperDocuments;
+
+            if (enabledOnlyDocsCheckBox.Checked)
             {
-                Task<string> responseString = httpResponse.Content.ReadAsStringAsync();
-                var doc = JsonConvert.DeserializeObject<Document>(responseString.Result);
-                return doc;
+                response = response
+                        .Where(x => x.Enable.Equals(enabledOnlyDocsCheckBox.Checked)).ToList();
             }
-            else
+
+            string searchWord = searchTextBox.Text.ToLower();
+            if (string.IsNullOrEmpty(searchWord) == false)
             {
-                throw new Exception($"Error retrieving external source documents!'{httpResponse.StatusCode}'");
+                 response = response
+                    .Where(x => x.EncompassEfolderName.ToLower().Contains(searchWord) ||
+                    x.ExternalSystemDocumentId.ToLower().Contains(searchWord)).ToList();
             }
+
+            return response;
         }
     }
 
