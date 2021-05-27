@@ -145,8 +145,8 @@
     <Reference Include="MainUI">
       <HintPath>..\..\..\..\..\..\SmartClientCache\Apps\UAC\Ellie Mae\xIHR5EqGa7zPnRG0YpD5z4TPAB0=\Encompass360\MainUI.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Reporting, Version=19.4.0.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -442,6 +442,7 @@
     <Compile Include="Standard Plugins\OpeneFolderDocument.cs" />
     <Compile Include="Standard Plugins\OpenInputForm.cs" />
     <Compile Include="Standard Plugins\VirtualFields.cs" />
+    <Compile Include="Standard Plugins\Wcm Plugins\BlendDocumentMapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Non Native Modifications\Dialog\BlendConditionManagerPost_Control.resx">
@@ -514,6 +515,7 @@
   <ItemGroup>
     <None Include="Resources\Forward.jpg" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Microsoft\ILMerge\ilmerge.exe" /allowDup /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2" /out:$(TargetDir)WcmCommunityPluginMerged.dll $(TargetPath) $(TargetDir)WyndhamLibGlobal.dll $(TargetDir)WyndhamLibCommonNoEncompassSDK.dll</PostBuildEvent>
