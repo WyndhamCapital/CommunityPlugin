@@ -381,11 +381,13 @@
     <Compile Include="Objects\Helpers\EncompassHelper.cs" />
     <Compile Include="Objects\Helpers\ExtensionMethods.cs" />
     <Compile Include="Objects\Helpers\FilterCDOHelper.cs" />
+    <Compile Include="Objects\Helpers\GridViewHelper.cs" />
     <Compile Include="Objects\Helpers\LoanCdoHelper.cs" />
     <Compile Include="Objects\Helpers\PipelineFilterCDO.cs" />
     <Compile Include="Objects\Helpers\PipelineFilterCDORoot.cs" />
-    <Compile Include="Objects\Helpers\Reflect.cs" />
+    <Compile Include="Objects\Helpers\ReflectHelper.cs" />
     <Compile Include="Objects\Helpers\RuleCDOHelper.cs" />
+    <Compile Include="Objects\Helpers\UIHelper.cs" />
     <Compile Include="Objects\Helpers\VIPCDO.cs" />
     <Compile Include="Objects\Helpers\WcmHelpers.cs" />
     <Compile Include="Objects\Interface\AbstractControlDescriptionProvider.cs" />
@@ -429,6 +431,8 @@
     <Compile Include="Objects\Models\EmailMessageWcmSignatureRequest.cs" />
     <Compile Include="Objects\Models\EncompassFieldInfo.cs" />
     <Compile Include="Objects\Models\EncompassLog.cs" />
+    <Compile Include="Objects\Models\Exceptions\DuplicateException.cs" />
+    <Compile Include="Objects\Models\Exceptions\InvalidValueException.cs" />
     <Compile Include="Objects\Models\FilterCDO.cs" />
     <Compile Include="Objects\Models\GetAutomatedPrelimConditionsResponse.cs" />
     <Compile Include="Objects\Models\IFBLog.cs" />
@@ -461,6 +465,7 @@
     <Compile Include="Objects\Models\WCM\DocumentMapper\Document.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\ExternalDocumentSource.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\FieldData.cs" />
+    <Compile Include="Objects\Attributes\UIMapAttribute.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
@@ -576,6 +581,7 @@
       <Name>WyndhamLib.Authentication</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>"C:\Program Files (x86)\Microsoft\ILMerge\ilmerge.exe" /allowDup /targetplatform:"v4,C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.7.2" /out:$(TargetDir)WcmCommunityPluginMerged.dll $(TargetPath) $(TargetDir)WyndhamLibGlobal.dll $(TargetDir)WyndhamLibCommonNoEncompassSDK.dll</PostBuildEvent>

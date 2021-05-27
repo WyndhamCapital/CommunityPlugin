@@ -248,7 +248,7 @@ namespace CommunityPlugin.Objects.Helpers
 
                 try
                 {
-                    var automedRule = Helpers.Reflect.ConvertToTyped<AutomatedConditionRuleInfo>(rule);
+                    var automedRule = Helpers.ReflectHelper.ConvertToTyped<AutomatedConditionRuleInfo>(rule);
 
                     foreach (var condition in automedRule.Conditions)
                     {
