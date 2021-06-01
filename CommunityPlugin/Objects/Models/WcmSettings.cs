@@ -13,6 +13,8 @@
 
         public string GetDocumentFromBlendUri { get; set; }
 
+        public string UpdateDocExportStatusBlendUri { get; set; }
+
 
     }
 }

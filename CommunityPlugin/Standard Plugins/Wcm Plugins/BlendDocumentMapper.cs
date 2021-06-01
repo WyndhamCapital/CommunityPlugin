@@ -40,11 +40,11 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 
             //documents only need to be mapped if file starter is blend_api date is empty
             var fs = currentLoan.Fields["LoanTeamMember.UserID.File Starter"].ToString();
-            var blendDocMapperCompleteDate = currentLoan.Fields["CX.BLEND.APP.DOCS.IMPORTED"].ToDate();
+            var blendDocMapperCompleteDate = currentLoan.Fields["CX.BLEND.APP.DOCS.IMPORTED"];
 
             if (locks != null)
             {
-                if (fs.Equals("blend_apitest") && blendDocMapperCompleteDate.IsFieldBlank())
+                if (fs.Equals("blend_apitest") && blendDocMapperCompleteDate.IsEmpty())
                 {
                     Task.Factory.StartNew(() =>
                     {
@@ -58,12 +58,14 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 
         private bool DownloadAndMapBlendApplicationDocuments(Loan loan)
         {
-            TrackedDocument eFolder;
+            TrackedDocument eFolder = null;
             string blendLoanId = loan.Fields["CX.BLEND.LOANID"].ToString();
             List<BlendDocReturned> eFolderDocuments = new List<BlendDocReturned>();
 
             string url = WcmSettings.GetAllPortalDocumentsUri;
             GetAllPortalDocumentsResponse getAllDocsResponse = BlendUtility.GetAllBlendPortalDocuments(blendLoanId, url);
+
+            
 
             try
             {
@@ -92,7 +94,21 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 
                             break;
                         case "GENERATED_ASSET_STATEMENT":
-                            eFolder = loan.Log.TrackedDocuments.Add("Asset - Bank Statements - Chk/Svgs", "Started");
+
+                            var assetPlaceholder = loan.Log.TrackedDocuments.GetDocumentsByTitle("Asset - Bank Statements - Chk/Svgs");
+                            if (assetPlaceholder.Count > 0)
+                            {
+                                foreach (TrackedDocument assetDoc in assetPlaceholder)
+                                {
+                                    eFolder = assetDoc;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                eFolder = loan.Log.TrackedDocuments.Add("Asset - Bank Statements - Chk/Svgs", "Started");
+                            }
+                            
                             var assetsMapped = MapDocumentToEfolder(loan, doc, eFolder);
                             if (assetsMapped)
                             {
@@ -108,12 +124,12 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
             }
             catch (Exception e)
             {
-                Macro.Alert($"Error blend documents. Please submit a helpdesk Ticket." + Environment.NewLine + $"Error Message: {e.Message}");
+                Macro.Alert($"Error mapping Blend Documents to the eFolder. Please submit a helpdesk Ticket." + Environment.NewLine + $"Error Message: {e.Message}");
                 return false;
             }
 
             //once mapped set the date field
-            loan.Fields["CX.BLEND.APP.DOCS.IMPORTED"].Value = DateTime.Today;
+            loan.Fields["CX.BLEND.APP.DOCS.IMPORTED"].Value = DateTime.Now;
             return true;
         }
 
@@ -125,7 +141,7 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
             {
                 var url = WcmSettings.GetDocumentFromBlendUri;
 
-                //ConfigurationManager.AppSettings["BlendContainer.GetDocument"];
+               
                 GetDocumentResponse docResponse = BlendUtility.GetDocumentFromBlendPortal(docId, url);
 
                 var data = new EllieMae.Encompass.BusinessObjects.DataObject(docResponse.DocumentData);
@@ -133,6 +149,16 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
                 attachment.Title = $"{document.name}";
 
                 eFolder.Attach(attachment);
+               
+                // once attached go update the export status
+
+                var uri = WcmSettings.UpdateDocExportStatusBlendUri;
+                var updateRequest = new UpdateDocumentExportStatusRequest()
+                {
+                    BlendDocumentId = docId,
+                    UtcDocumentExportTime = DateTime.UtcNow.ToShortDateString()
+                };
+                var updateResponse = BlendUtility.PostDocumentExportStatusUpdate(updateRequest, uri);
             }
             catch (Exception ex)
             {
