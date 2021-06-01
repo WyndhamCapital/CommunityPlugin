@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public class ConditionsMapper : MenuItemBase
+    public class DocumentMapper : MenuItemBase
     {
         public override bool CanRun()
         {
-            return PluginAccess.CheckAccess(nameof(ConditionsMapper));
+            return PluginAccess.CheckAccess(nameof(DocumentMapper));
         }
 
         protected override void menuItem_Click(object sender, EventArgs e)
         {
-            ConditionsMapper_Table_Form f = new ConditionsMapper_Table_Form();
+            DocumentMapper_Table_Form f = new DocumentMapper_Table_Form();
             f.Show();
         }
     }

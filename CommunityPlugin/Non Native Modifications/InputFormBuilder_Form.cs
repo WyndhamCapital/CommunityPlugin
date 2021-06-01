@@ -33,9 +33,9 @@ namespace CommunityPlugin.Non_Native_Modifications
             p.Controls.Add(f);
             tabs.TabPages.Add(p);
 
-            OpenFileDialog o = (OpenFileDialog)Reflect.GetField("ofdBrowse", f);
-            OpenFileDialog s = (OpenFileDialog)Reflect.GetField("sfdBrowse", f);
-            ToolStripMenuItem save = (ToolStripMenuItem)Reflect.GetField("mnuFileSave", f);
+            OpenFileDialog o = (OpenFileDialog)ReflectHelper.GetField("ofdBrowse", f);
+            OpenFileDialog s = (OpenFileDialog)ReflectHelper.GetField("sfdBrowse", f);
+            ToolStripMenuItem save = (ToolStripMenuItem)ReflectHelper.GetField("mnuFileSave", f);
             save.Click += Save_Click;
         }
 

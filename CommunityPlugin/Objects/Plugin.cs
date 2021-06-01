@@ -7,6 +7,7 @@ using EllieMae.Encompass.BusinessObjects.Loans;
 using EllieMae.Encompass.Client;
 using System;
 using System.Windows.Forms;
+using CommunityPlugin.Objects.Helpers;
 
 namespace CommunityPlugin.Objects
 {
@@ -152,7 +153,7 @@ namespace CommunityPlugin.Objects
             //    EncompassHelper.LoanDataManager.LoanData.AfterDDMApplied += Base_AfterDDMApplied;
 
             //if (typeof(IExecuteEmailTriggers).IsAssignableFrom(GetType()))
-            //    EncompassHelper.LoanDataManager.LoanData.ExecuteEmailTriggers += Base_ExecuteEmailTriggers;
+            //    EncompassHelper.LoanDataManager.LoanData.exe += Base_ExecuteEmailTriggers;
 
 
             LoanOpened(sender, e);

@@ -13,11 +13,11 @@ using WyndhamLibGlobal.BlendPortal;
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
 
-    public partial class ConditionsMapperTable_Form : Form
+    public partial class ConditionsMapper_Table_Form : Form
     {
         ConditionsMapperSettings ConditionMappingSettings = null;
 
-        public ConditionsMapperTable_Form()
+        public ConditionsMapper_Table_Form()
         {
             InitializeComponent();
         }
@@ -68,7 +68,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             var conditionSelected = (ConditionsMapperCondition)row.Tag;
 
-            using (ConditionsMapperEditCondition_Form editConditionDialog = new ConditionsMapperEditCondition_Form(conditionSelected))
+            using (ConditionsMapper_EditCondition_Form editConditionDialog = new ConditionsMapper_EditCondition_Form(conditionSelected))
             {
 
                 if (editConditionDialog.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
@@ -87,7 +87,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void addCondition_Click(object sender, EventArgs e)
         {
-            using (ConditionsMapperEditCondition_Form newConditionDialog = new ConditionsMapperEditCondition_Form())
+            using (ConditionsMapper_EditCondition_Form newConditionDialog = new ConditionsMapper_EditCondition_Form())
             {
 
                 if (newConditionDialog.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)

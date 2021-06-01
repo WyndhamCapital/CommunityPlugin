@@ -1,6 +1,6 @@
 ﻿namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    partial class ConditionsMapperTable_Form
+    partial class ConditionsMapper_Table_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapperTable_Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapper_Table_Form));
             this.panel1 = new System.Windows.Forms.Panel();
             this.deleteCondition = new System.Windows.Forms.PictureBox();
             this.editCondition = new System.Windows.Forms.PictureBox();

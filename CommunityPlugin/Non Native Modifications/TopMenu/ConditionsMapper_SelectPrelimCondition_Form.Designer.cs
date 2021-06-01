@@ -1,6 +1,6 @@
 ﻿namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    partial class ConditionsMapperSelectPrelimCondition_Form
+    partial class ConditionsMapper_SelectPrelimCondition_Form
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapperSelectPrelimCondition_Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConditionsMapper_SelectPrelimCondition_Form));
             this.ConditionsGridView1 = new System.Windows.Forms.DataGridView();
             this.ConditionName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.RuleName = new System.Windows.Forms.DataGridViewTextBoxColumn();

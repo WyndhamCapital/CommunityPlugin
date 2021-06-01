@@ -11,17 +11,17 @@ using WyndhamLibGlobal.BlendPortal;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public partial class ConditionsMapperEditCondition_Form : Form
+    public partial class ConditionsMapper_EditCondition_Form : Form
     {
 
         public ConditionsMapperCondition TheCondition = null;
 
-        public ConditionsMapperEditCondition_Form()
+        public ConditionsMapper_EditCondition_Form()
         {
             InitializeComponent();
         }
 
-        public ConditionsMapperEditCondition_Form(ConditionsMapperCondition conditionToEdit)
+        public ConditionsMapper_EditCondition_Form(ConditionsMapperCondition conditionToEdit)
         {
             InitializeComponent();
             this.LoadCondition(conditionToEdit);
@@ -100,7 +100,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void addPrelimCondition_Click(object sender, EventArgs e)
         {
-            using (ConditionsMapperSelectPrelimCondition_Form selectPrelimForm = new ConditionsMapperSelectPrelimCondition_Form())
+            using (ConditionsMapper_SelectPrelimCondition_Form selectPrelimForm = new ConditionsMapper_SelectPrelimCondition_Form())
             {
 
                 if (selectPrelimForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
