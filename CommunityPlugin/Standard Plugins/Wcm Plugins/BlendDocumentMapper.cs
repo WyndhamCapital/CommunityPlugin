@@ -33,7 +33,7 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
             //string url = wcmSettings.GetDocumentImporterSourcesUrl;
             // HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(url);
             // var rawJson = await httpResponse.Content.ReadAsStringAsync();
-
+            
             var currentLoan = EncompassApplication.CurrentLoan;
             var currentUser = EncompassApplication.CurrentUser;
             LoanLockList locks = currentLoan.GetCurrentLocks();
@@ -41,10 +41,12 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
             //documents only need to be mapped if file starter is blend_api date is empty
             var fs = currentLoan.Fields["LoanTeamMember.UserID.File Starter"].ToString();
             var blendDocMapperCompleteDate = currentLoan.Fields["CX.BLEND.APP.DOCS.IMPORTED"];
+            var implementationDate = new DateTime(2021, 06, 02);
+            var fileStartedDate =  currentLoan.Fields["MS.START"].ToDate();
 
             if (locks != null)
             {
-                if (fs.Equals("blend_apitest") && blendDocMapperCompleteDate.IsEmpty())
+                if (fs.Equals("blend_api") && blendDocMapperCompleteDate.IsEmpty() && fileStartedDate >= implementationDate)
                 {
                     Task.Factory.StartNew(() =>
                     {
