@@ -308,6 +308,12 @@
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.Designer.cs">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DataExtraction_AllDocs_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\TopMenu\DataExtraction_AllDocs_Form.Designer.cs">
+      <DependentUpon>DataExtraction_AllDocs_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="Non Native Modifications\TopMenu\DocumentMapper.cs" />
     <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.cs">
       <SubType>Form</SubType>
@@ -462,6 +468,7 @@
     <Compile Include="Objects\Models\WCM\DocumentImporter\ImportedDocumentsLoanCdo.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\MetaDataExporting.cs" />
     <Compile Include="Objects\Models\WCM\DocumentImporter\TrackedDoc.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentImporter\UI\ImportedDocUIDocument.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\Document.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\ExternalDocumentSource.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\FieldData.cs" />

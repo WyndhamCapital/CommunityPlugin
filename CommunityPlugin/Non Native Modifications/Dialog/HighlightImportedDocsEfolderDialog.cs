@@ -14,6 +14,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CommunityPlugin.Objects.Models.WCM.DocumentImporter;
+using CommunityPlugin.Objects.Models.WCM.DocumentImporter.UI;
 using Elli.Common;
 using EllieMae.EMLite.ClientServer.eFolder;
 using EllieMae.EMLite.DataEngine.Log;
@@ -32,7 +33,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         private static readonly WcmSettings WcmSettings = CDOHelper.CDO.CommunitySettings.WcmSettings;
         private static readonly string ImportedDocsLoanCdoName = "WCM.DocumentImporterDocs.json";
 
-        TrackedDoc TrackedDocLastUpdated = new TrackedDoc();
+        TrackedDoc _trackedDocLastUpdated = new TrackedDoc();
         public ImportedDocumentsLoanCdo ImportedDocsLoanCdo = null;
 
 
@@ -66,17 +67,17 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         {
 
 
-            var Entry = e.LogEntry;
+            var entry = e.LogEntry;
 
             // SP - whenever a new attachment is added to a tracked doc, 
             // we need to check if this attachment was from AI and if the tracked doc no longer needs to be highlighted
-            if (Entry != null && (Entry.EntryType.Equals(LogEntryType.TrackedDocument)))
+            if (entry != null && (entry.EntryType.Equals(LogEntryType.TrackedDocument)))
             {
                 // SP - any updates to loan CDO won't affect UI or user until next time they load eFolder view
                 // run on a new thread so UI isn't delayed
                 Task.Factory.StartNew(() =>
                 {
-                    UpdateImportedDocsLoanCdoHighlighting(Entry);
+                    UpdateImportedDocsLoanCdoHighlighting(entry);
                 });
             }
         }
@@ -131,16 +132,16 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                     // is this guid, set enable highlight to FALSE. 
                     UnhighlightImportedDocumentsLoanCdo(trackedDocumemnt);
 
-                    TrackedDocLastUpdated = currentTrackedDoc;
+                    _trackedDocLastUpdated = currentTrackedDoc;
                 }
             }
         }
 
         private bool HasTrackedDocumentChanged(TrackedDoc trackedDocumemnt)
         {
-            if (TrackedDocLastUpdated == null) { return true; }
+            if (_trackedDocLastUpdated == null) { return true; }
 
-            if (trackedDocumemnt.Equals(TrackedDocLastUpdated))
+            if (trackedDocumemnt.Equals(_trackedDocLastUpdated))
             {
                 return false;
             }
@@ -221,32 +222,24 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         private void HighlightEfolderDocs(Form eFolderDialogForm)
         {
-
-            //SP - when we initially tried to inject a new colum on the gridview, we needed to find a context menu
-            // comment code out below to iterate through every single ui control and save it to json on local machine
-            //if (Directory.Exists(@"c:\temp\Trapeze"))
-            //{
-            //    ExportUiControlNames(eFolderDialogForm);
-            //}
-
             GridView documentGrid = eFolderDialogForm.Controls.Find("gvDocuments", true).FirstOrDefault() as GridView;
 
             if (documentGrid != null)
             {
+                // SP - add column to efolder code below -- currently will exception out if a new column is added to dialog...
+                #region Add Column to GV
                 //GVColumn aiColumn = documentGrid.Columns.FirstOrDefault(x => x.Name.Equals("AI"));
                 //if (aiColumn != null)
                 //    documentGrid.Columns.Remove(aiColumn);
                 //aiColumn = new GVColumn("AI");
                 //documentGrid.Columns.Add(aiColumn);
 
-                IDictionary<GVItem, DocumentLog> documentDictionary = new Dictionary<GVItem, DocumentLog>();
 
-                foreach (GVItem row in documentGrid.Items)
-                {
-                    var document = (DocumentLog)row.Tag;
-                    documentDictionary.Add(row, document);
-                }
 
+                #endregion
+
+                IDictionary<GVItem, DocumentLog> efolderDocDictionary =
+                    GridViewHelper.GetAllEncompassGridViewItems<DocumentLog>(documentGrid);
 
                 foreach (var importedDocument in ImportedDocsLoanCdo.Documents)
                 {
@@ -254,241 +247,275 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
                     if (importedDocument.EnableHighlighting == false)
                         continue;
 
-                    var matchingEfolderDoc =
-                        documentDictionary
-                            .FirstOrDefault(x => x.Value.Guid.Equals(importedDocument.EncompassEfolderId));
-
-                    // if matching efolder is found
-                    if (matchingEfolderDoc.Key != null)
+                    var efolderDocDetails = GetMatchingEfolderDocFromUi(importedDocument, efolderDocDictionary);
+                    if (efolderDocDetails.HighlightEfolderRow)
                     {
-                        var externalSource =
-                            _externalSourcesDictionary.FirstOrDefault(x =>
-                                x.Key.Equals(importedDocument.ExternalSourceId));
+                        HighlightEfolderDoc(efolderDocDetails);
 
-                        if (externalSource.Value != null)
-                        {
-                            var doc = matchingEfolderDoc.Value;
-                            var gridRow = matchingEfolderDoc.Key;
+                        #region SP - this is where you would set column
+                        //// gridRow.SubItems[aiColumn.Index].Text = "Y";
+                        // gridRow.SubItems[aiColumn.Name].Text = "Y";
+                        #endregion
 
-                            //// gridRow.SubItems[aiColumn.Index].Text = "Y";
-                            // gridRow.SubItems[aiColumn.Name].Text = "Y";
-
-                            if (doc.DateAccessed < doc.DateReceived)
-                            {
-                                gridRow.BackColor = externalSource.Value.NewDocumentColor;
-                            }
-                            else
-                            {
-                                gridRow.BackColor = externalSource.Value.AlreadyViewedDocumentColor;
-                            }
-                        }
                     }
                 }
             }
 
 
 
+        }
+
+        private void HighlightEfolderDoc(ImportedDocUIDocument efolderDoc)
+        {
+            if (efolderDoc.EfolderDocumentDetails.DateAccessed < efolderDoc.EfolderDocumentDetails.DateReceived)
+            {
+                efolderDoc.EfolderGridViewRow.BackColor = efolderDoc.DocumentSource.NewDocumentColor;
+            }
+            else
+            {
+                efolderDoc.EfolderGridViewRow.BackColor = efolderDoc.DocumentSource.AlreadyViewedDocumentColor;
+            }
+        }
+
+        private ImportedDocUIDocument GetMatchingEfolderDocFromUi(ImportedDocument importedDocument,
+            IDictionary<GVItem, DocumentLog> efolderDocDictionary)
+        {
+
+            ImportedDocUIDocument result = new ImportedDocUIDocument();
+
+            var matchingEfolderDoc =
+                efolderDocDictionary
+                    .FirstOrDefault(x => x.Value.Guid.Equals(importedDocument.EncompassEfolderId));
+
+            // if matching efolder is found (if not found, efolder has been deleted by end user)
+            if (matchingEfolderDoc.Key == null)
+            {
+                result.HighlightEfolderRow = false;
+                return result;
+            }
+
+
+            var externalSource =
+                    _externalSourcesDictionary.FirstOrDefault(x =>
+                        x.Key.Equals(importedDocument.ExternalSourceId));
+
+            if (externalSource.Value == null)
+            {
+                result.HighlightEfolderRow = false;
+                return result;
+            }
+
+            result.HighlightEfolderRow = true;
+
+            result.DocumentSource = externalSource.Value;
+            result.EfolderDocumentDetails = matchingEfolderDoc.Value;
+            result.EfolderGridViewRow = matchingEfolderDoc.Key;
+
+            return result;
+        }
+
+
+
+        private ImportedDocUIDocument GetMatchingFileUnassignedAttachmentFromUi(ImportedDocument importedDocument,
+            IDictionary<GVItem, ImageAttachment> fileManagerAttachmentDictionary)
+        {
+
+            ImportedDocUIDocument result = new ImportedDocUIDocument();
+
+            var matchingAttachment =
+                fileManagerAttachmentDictionary
+                    .FirstOrDefault(x => x.Value.ID.Equals(importedDocument.EncompassAttachmentId, StringComparison.OrdinalIgnoreCase));
+
+            // if matching file is found from loan cdo, highlight row!
+            if (matchingAttachment.Key == null)
+            {
+                result.HighlightEfolderRow = false;
+                return result;
+            }
+
+            var externalSource =
+                    _externalSourcesDictionary.FirstOrDefault(x =>
+                        x.Key.Equals(importedDocument.ExternalSourceId));
+
+            if (externalSource.Value == null)
+            {
+                result.HighlightEfolderRow = false;
+                return result;
+            }
+
+            result.HighlightEfolderRow = true;
+            result.DocumentSource = externalSource.Value;
+            result.EfolderGridViewRow = matchingAttachment.Key;
+
+            return result;
         }
 
         private void HighlightFilesUnassigned(Form documentDialogForm)
         {
-
-            List<object> export = new List<object>();
-
             var fileGrid = documentDialogForm.Controls.Find("gvUnassigned", true).FirstOrDefault() as GridView;
             if (fileGrid != null)
             {
-                IDictionary<GVItem, ImageAttachment> attachmentDictionary = new Dictionary<GVItem, ImageAttachment>();
+                IDictionary<GVItem, ImageAttachment> attachmentDictionary =
+                GridViewHelper.GetAllEncompassGridViewItems<ImageAttachment>(fileGrid);
 
-                foreach (GVItem row in fileGrid.Items)
+                var importedDocsUnassigned = ImportedDocsLoanCdo.Documents
+                     .Where(x => string.IsNullOrEmpty(x.EncompassEfolderId)).ToList();
+
+                foreach (var importedDocument in importedDocsUnassigned)
                 {
-                    var attachment = (ImageAttachment)row.Tag;
-                    attachmentDictionary.Add(row, attachment);
-                }
-
-                foreach (var importedDocument in ImportedDocsLoanCdo.Documents)
-                {
-                    var matchingAttachment =
-                        attachmentDictionary
-                            .FirstOrDefault(x => x.Value.ID.Equals(importedDocument.EncompassAttachmentId, StringComparison.OrdinalIgnoreCase));
-
-                    // if matching file is found from loan cdo, highlight row!
-                    if (matchingAttachment.Key != null)
+                    var attachmentDetails = GetMatchingFileUnassignedAttachmentFromUi(importedDocument, attachmentDictionary);
+                    if (attachmentDetails.HighlightEfolderRow)
                     {
-
-                        var externalSource =
-                            _externalSourcesDictionary.FirstOrDefault(x =>
-                                x.Key.Equals(importedDocument.ExternalSourceId));
-
-                        if (externalSource.Value != null)
-                        {
-                            var gridRow = matchingAttachment.Key;
-                            gridRow.BackColor = externalSource.Value.AlreadyViewedDocumentColor;
-                        }
-
+                        attachmentDetails.EfolderGridViewRow.BackColor =
+                            attachmentDetails.DocumentSource.AlreadyViewedDocumentColor;
                     }
                 }
-            }
-
-
-            if (Directory.Exists(@"c:\temp\Trapeze"))
-            {
-                string output = JsonConvert.SerializeObject(export,
-                    Formatting.Indented,
-                    new JsonSerializerSettings
-                    {
-                        NullValueHandling = NullValueHandling.Ignore
-                    });
-
-                string fileName =
-                    $"C:\\temp\\Trapeze\\FilesUnassignedGridViewExport_{EncompassApplication.CurrentLoan.LoanNumber}-{DateTime.Now:MM-dd-yyyy_hh-mm-tt}.json";
-                File.WriteAllText(fileName, output);
             }
 
         }
 
 
+        ////**** Below is 100% discovery to find other uses in UI
         //__________________________________________________
-        //**** Below is 100% discovery to find other uses in UI
 
-        // SP - this is 100% exploratory -- seeing all UI names to 'hijack' UI
-        private void ExportUiControlNames(Form eFolderDialogForm)
-        {
-            List<ContextMenu> ctxtMenu = new List<ContextMenu>();
-            var allControls = GetAllControls(eFolderDialogForm, out ctxtMenu);
+        //// SP - this is 100% exploratory -- seeing all UI names to 'hijack' UI
+        //private void ExportUiControlNames(Form eFolderDialogForm)
+        //{
+        //    List<ContextMenu> ctxtMenu = new List<ContextMenu>();
+        //    var allControls = GetAllControls(eFolderDialogForm, out ctxtMenu);
 
-            List<Tuple<string, string, string>> list = new List<Tuple<string, string, string>>();
-
-
-            foreach (var control in allControls)
-            {
-                try
-                {
-                    string text = string.IsNullOrEmpty(control.Text) ? "" : control.Text;
-                    list.Add(new Tuple<string, string, string>(control.Name, control.GetType().ToString(), text));
+        //    List<Tuple<string, string, string>> list = new List<Tuple<string, string, string>>();
 
 
-                    if (control.GetType() == typeof(ContextMenuStrip))
-                    {
-                        var menu = (ContextMenuStrip)control;
-
-                        for (int i = 0; i < menu.Items.Count; i++)
-                        {
-                            try
-                            {
-                                var item = menu.Items[i];
-                                list.Add(new Tuple<string, string, string>(control.Name, item.Name, item.Text));
-
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                        }
-
-                    }
+        //    foreach (var control in allControls)
+        //    {
+        //        try
+        //        {
+        //            string text = string.IsNullOrEmpty(control.Text) ? "" : control.Text;
+        //            list.Add(new Tuple<string, string, string>(control.Name, control.GetType().ToString(), text));
 
 
-                }
-                catch (Exception e)
-                {
+        //            if (control.GetType() == typeof(ContextMenuStrip))
+        //            {
+        //                var menu = (ContextMenuStrip)control;
 
-                }
-            }
+        //                for (int i = 0; i < menu.Items.Count; i++)
+        //                {
+        //                    try
+        //                    {
+        //                        var item = menu.Items[i];
+        //                        list.Add(new Tuple<string, string, string>(control.Name, item.Name, item.Text));
 
+        //                    }
+        //                    catch (Exception e)
+        //                    {
 
-            foreach (var control in ctxtMenu)
-            {
-                try
-                {
-                    list.Add(new Tuple<string, string, string>(control.Name, control.GetType().ToString(), ""));
-                }
-                catch (Exception e)
-                {
+        //                    }
+        //                }
 
-                }
-
-                foreach (MenuItem item in control.MenuItems)
-                {
-                    try
-                    {
-                        string text = string.IsNullOrEmpty(item.Text) ? "" : item.Text;
-                        list.Add(new Tuple<string, string, string>($"{control.Name}_{item.Name}", item.GetType().ToString(), text));
-                    }
-                    catch (Exception e)
-                    {
-                        ;
-                    }
-
-                }
-
-            }
-            if (Directory.Exists(@"c:\temp\Trapeze"))
-            {
-                string output = JsonConvert.SerializeObject(list, Formatting.Indented);
-                string fileName =
-                    $"C:\\temp\\Trapeze\\AllFormEfolderDialogControls_{DateTime.Now:MM-dd-yyyy_hh-mm-tt}.json";
-                File.WriteAllText(fileName, output);
-            }
-        }
-        private void ExportTableLaoutColumnSelectorControls(Form openForm)
-        {
-            var controls = openForm.Controls;
-            Dictionary<string, string> export = new Dictionary<string, string>();
-            for (int i = 0; i < controls.Count; i++)
-            {
-                var ctrl = controls[i];
-                export.Add(ctrl.Name, ctrl.GetType().ToString());
-            }
-
-            if (Directory.Exists(@"c:\temp\Trapeze"))
-            {
-                string output = JsonConvert.SerializeObject(export, Formatting.Indented);
-                string fileName =
-                    $"C:\\temp\\Trapeze\\ColumnSelectorControls_{EncompassApplication.CurrentLoan.LoanNumber}-{DateTime.Now:MM-dd-yyyy_hh-mm-tt}.json";
-                File.WriteAllText(fileName, output);
-            }
-        }
-
-        public IEnumerable<System.Windows.Forms.Control> GetAll(System.Windows.Forms.Control control, Type type)
-        {
-            var controls = control.Controls.Cast<System.Windows.Forms.Control>();
-
-            return controls.SelectMany(ctrl => GetAll(ctrl, type))
-                .Concat(controls)
-                .Where(c => c.GetType() == type);
-        }
-
-        private List<System.Windows.Forms.Control> GetAllControls(System.Windows.Forms.Control container, out List<ContextMenu> contextMenu)
-        {
-            List<System.Windows.Forms.Control> response = new List<System.Windows.Forms.Control>();
-            contextMenu = new List<ContextMenu>();
+        //            }
 
 
-            foreach (System.Windows.Forms.Control c in container.Controls)
-            {
+        //        }
+        //        catch (Exception e)
+        //        {
 
-                response.Add(c);
+        //        }
+        //    }
 
-                if (c.ContextMenuStrip != null)
-                {
-                    response.Add(c.ContextMenuStrip);
-                }
 
-                if (c.ContextMenu != null)
-                {
-                    contextMenu.Add(c.ContextMenu);
-                }
+        //    foreach (var control in ctxtMenu)
+        //    {
+        //        try
+        //        {
+        //            list.Add(new Tuple<string, string, string>(control.Name, control.GetType().ToString(), ""));
+        //        }
+        //        catch (Exception e)
+        //        {
 
-                List<ContextMenu> ctxtMenu = new EmList<ContextMenu>();
-                var controls = GetAllControls(c, out ctxtMenu);
-                response.AddRange(controls);
-                contextMenu.AddRange(ctxtMenu);
+        //        }
 
-            }
+        //        foreach (MenuItem item in control.MenuItems)
+        //        {
+        //            try
+        //            {
+        //                string text = string.IsNullOrEmpty(item.Text) ? "" : item.Text;
+        //                list.Add(new Tuple<string, string, string>($"{control.Name}_{item.Name}", item.GetType().ToString(), text));
+        //            }
+        //            catch (Exception e)
+        //            {
+        //                ;
+        //            }
 
-            return response;
-        }
+        //        }
+
+        //    }
+        //    if (Directory.Exists(@"c:\temp\Trapeze"))
+        //    {
+        //        string output = JsonConvert.SerializeObject(list, Formatting.Indented);
+        //        string fileName =
+        //            $"C:\\temp\\Trapeze\\AllFormEfolderDialogControls_{DateTime.Now:MM-dd-yyyy_hh-mm-tt}.json";
+        //        File.WriteAllText(fileName, output);
+        //    }
+        //}
+        //private void ExportTableLaoutColumnSelectorControls(Form openForm)
+        //{
+        //    var controls = openForm.Controls;
+        //    Dictionary<string, string> export = new Dictionary<string, string>();
+        //    for (int i = 0; i < controls.Count; i++)
+        //    {
+        //        var ctrl = controls[i];
+        //        export.Add(ctrl.Name, ctrl.GetType().ToString());
+        //    }
+
+        //    if (Directory.Exists(@"c:\temp\Trapeze"))
+        //    {
+        //        string output = JsonConvert.SerializeObject(export, Formatting.Indented);
+        //        string fileName =
+        //            $"C:\\temp\\Trapeze\\ColumnSelectorControls_{EncompassApplication.CurrentLoan.LoanNumber}-{DateTime.Now:MM-dd-yyyy_hh-mm-tt}.json";
+        //        File.WriteAllText(fileName, output);
+        //    }
+        //}
+
+        //public IEnumerable<System.Windows.Forms.Control> GetAll(System.Windows.Forms.Control control, Type type)
+        //{
+        //    var controls = control.Controls.Cast<System.Windows.Forms.Control>();
+
+        //    return controls.SelectMany(ctrl => GetAll(ctrl, type))
+        //        .Concat(controls)
+        //        .Where(c => c.GetType() == type);
+        //}
+
+        //private List<System.Windows.Forms.Control> GetAllControls(System.Windows.Forms.Control container, out List<ContextMenu> contextMenu)
+        //{
+        //    List<System.Windows.Forms.Control> response = new List<System.Windows.Forms.Control>();
+        //    contextMenu = new List<ContextMenu>();
+
+
+        //    foreach (System.Windows.Forms.Control c in container.Controls)
+        //    {
+
+        //        response.Add(c);
+
+        //        if (c.ContextMenuStrip != null)
+        //        {
+        //            response.Add(c.ContextMenuStrip);
+        //        }
+
+        //        if (c.ContextMenu != null)
+        //        {
+        //            contextMenu.Add(c.ContextMenu);
+        //        }
+
+        //        List<ContextMenu> ctxtMenu = new EmList<ContextMenu>();
+        //        var controls = GetAllControls(c, out ctxtMenu);
+        //        response.AddRange(controls);
+        //        contextMenu.AddRange(ctxtMenu);
+
+        //    }
+
+        //    return response;
+        //}
 
     }
 

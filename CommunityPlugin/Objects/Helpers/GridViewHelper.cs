@@ -1,4 +1,5 @@
 ﻿using CommunityPlugin.Objects.Attributes;
+using EllieMae.EMLite.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -111,6 +112,18 @@ namespace CommunityPlugin.Objects.Helpers
             }
 
             return null;
+        }
+
+        public static IDictionary<GVItem, T> GetAllEncompassGridViewItems<T>(GridView gv)
+        {
+            IDictionary<GVItem, T> result = new Dictionary<GVItem, T>();
+            foreach (GVItem row in gv.Items)
+            {
+                var document = (T)row.Tag;
+                result.Add(row, document);
+            }
+
+            return result;
         }
     }
 }
