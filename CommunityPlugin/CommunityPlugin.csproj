@@ -212,6 +212,12 @@
     </Compile>
     <Compile Include="Non Native Modifications\Dialog\BlendSendDisclosures.cs" />
     <Compile Include="Non Native Modifications\Dialog\ConditionsManagerInUwCondition.cs" />
+    <Compile Include="Non Native Modifications\Dialog\DataExtractionField_Control.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Non Native Modifications\Dialog\DataExtractionField_Control.Designer.cs">
+      <DependentUpon>DataExtractionField_Control.cs</DependentUpon>
+    </Compile>
     <Compile Include="Non Native Modifications\Dialog\HighlightImportedDocsEfolderDialog.cs" />
     <Compile Include="Non Native Modifications\DisableServices.cs" />
     <Compile Include="Non Native Modifications\FormWrapper.cs" />
@@ -308,12 +314,14 @@
     <Compile Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.Designer.cs">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\DataExtraction_AllDocs_Form.cs">
+    <Compile Include="Objects\Models\WCM\FieldExtraction\UI\UIExtractedField.cs" />
+    <Compile Include="Standard Plugins\DataExtractionLoanAllDocs_Form.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Non Native Modifications\TopMenu\DataExtraction_AllDocs_Form.Designer.cs">
-      <DependentUpon>DataExtraction_AllDocs_Form.cs</DependentUpon>
+    <Compile Include="Standard Plugins\DataExtractionLoanAllDocs_Form.Designer.cs">
+      <DependentUpon>DataExtractionLoanAllDocs_Form.cs</DependentUpon>
     </Compile>
+    <Compile Include="Standard Plugins\DataExtractionLoanAllDocs_Plugin.cs" />
     <Compile Include="Non Native Modifications\TopMenu\DocumentMapper.cs" />
     <Compile Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.cs">
       <SubType>Form</SubType>
@@ -471,8 +479,15 @@
     <Compile Include="Objects\Models\WCM\DocumentImporter\UI\ImportedDocUIDocument.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\Document.cs" />
     <Compile Include="Objects\Models\WCM\DocumentMapper\ExternalDocumentSource.cs" />
-    <Compile Include="Objects\Models\WCM\DocumentMapper\FieldData.cs" />
+    <Compile Include="Objects\Models\WCM\DocumentMapper\FieldMapping.cs" />
     <Compile Include="Objects\Attributes\UIMapAttribute.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\ClassifiedDocument.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\FieldMapping.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\IClassifiedDocument.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\IDocument.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\IFieldData.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\IOriginalDocument.cs" />
+    <Compile Include="Objects\Models\WCM\FieldExtraction\OriginalDocument.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
@@ -509,6 +524,9 @@
     <EmbeddedResource Include="Non Native Modifications\Dialog\BlendConditionManagerPost_Control.resx">
       <DependentUpon>BlendConditionManagerPost_Control.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Non Native Modifications\Dialog\DataExtractionField_Control.resx">
+      <DependentUpon>DataExtractionField_Control.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\Pipeline\ReassignmentDialog.resx">
       <DependentUpon>ReassignmentDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -538,6 +556,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\CreateCustomFields_Form.resx">
       <DependentUpon>CreateCustomFields_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Standard Plugins\DataExtractionLoanAllDocs_Form.resx">
+      <DependentUpon>DataExtractionLoanAllDocs_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Non Native Modifications\TopMenu\DocumentMapper_SingleDoc_Form.resx">
       <DependentUpon>DocumentMapper_SingleDoc_Form.cs</DependentUpon>

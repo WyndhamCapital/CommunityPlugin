@@ -44,23 +44,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         }
 
 
-        public List<Document> GetMapperDocuments(ExternalDocumentSource sourceToRetrieve)
-        {
-            string finalUri = $"{WcmSettings.GetDocumentMapperDocumentsUrl}?externalSourceId={sourceToRetrieve.Id}&includeFieldMappings=true&enabledOnlyDocs={false}";
-            HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(finalUri);
-
-            if (httpResponse.IsSuccessStatusCode)
-            {
-                Task<string> responseString = httpResponse.Content.ReadAsStringAsync();
-                var docs = JsonConvert.DeserializeObject<List<Document>>(responseString.Result);
-                MapperDocuments = docs;
-                return docs;
-            }
-            else
-            {
-                throw new Exception($"Error retrieving external source documents!'{httpResponse.StatusCode}'");
-            }
-        }
 
         private void LoadExternalSourcesInDropDown()
         {
@@ -87,8 +70,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             ExternalDocumentSource selectedSource = GetExternalSourceSelected();
                 
-            List<Document> docs = GetMapperDocuments(selectedSource);
-
+            List<Document> docs = WcmHelpers.GetMapperDocuments(selectedSource.Id, WcmSettings);
+            MapperDocuments = docs;
 
             UpdateDocsGridview(docs);
             EnableControls();
@@ -219,7 +202,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private int? GetCurrentSelectedDocId(out string errorMsg)
         {
             errorMsg = null;
-            var rowSelected = WcmHelpers.GetCurrentGridRow(documentsDataGridView, out errorMsg);
+            var rowSelected = GridViewHelper.GetCurrentGridRow(documentsDataGridView, out errorMsg);
 
             if (rowSelected == null)
             {

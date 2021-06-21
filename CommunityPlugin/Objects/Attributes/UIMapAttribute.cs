@@ -18,5 +18,6 @@ namespace CommunityPlugin.Objects.Attributes
 
         public bool Editable { get; set; }
 
+        public bool Ignore { get; set; }
     }
 }

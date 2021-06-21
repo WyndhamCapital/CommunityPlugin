@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CommunityPlugin.Objects.Models.WCM.DocumentMapper
 {
-    public class FieldData
+    public class FieldMapping
     {
         [UIMap(DisplayName = "External Field ID")]
         [JsonProperty(Required = Required.Always)]

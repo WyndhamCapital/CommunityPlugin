@@ -28,25 +28,19 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             Settings = wcmSettings;
             TheDocument = document;
 
-            LoadFieldMappingColumns();
+            GridViewHelper.LoadFieldMappingColumns<FieldMapping>(fieldMappingsDataGridView);
             MapDocumentToUi();
         }
 
 
 
 
-        public void LoadFieldMappingColumns()
-        {
-            var columnHeaders = GridViewHelper.CreateColumnHeadersFromType(typeof(FieldData), (column) =>
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells);
 
-            fieldMappingsDataGridView.Columns.AddRange(columnHeaders.ToArray());
-        }
 
         public DocumentMapper_SingleDoc_Form(int externalSourceId, WcmSettings wcmSettings)
         {
             InitializeComponent();
-            LoadFieldMappingColumns();
+            GridViewHelper.LoadFieldMappingColumns<FieldMapping>(fieldMappingsDataGridView);
 
             Settings = wcmSettings;
             ExternalSourceId = externalSourceId;
@@ -58,48 +52,37 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             externalDocId_textBox.Text = TheDocument.ExternalSystemDocumentId;
             enableChckBox.Checked = TheDocument.Enable;
 
-            this.LoanFieldsGridview(TheDocument.FieldMappings);
-        }
-
-        private void LoanFieldsGridview(IList<FieldData> fieldMappings)
-        {
-            fieldMappingsDataGridView.Rows.Clear();
-
-            foreach (var field in fieldMappings)
-            {
-                int fieldIndex = fieldMappingsDataGridView.Rows.Add(MapFieldMappingToDataGridRowForUi(field));
-                fieldMappingsDataGridView.Rows[fieldIndex].Tag = field;
-            }
+            GridViewHelper.LoadListObjectsToGridview(fieldMappingsDataGridView, TheDocument.FieldMappings);
         }
 
 
 
-        private object[] MapFieldMappingToDataGridRowForUi(FieldData field)
+
+        //private void LoadFieldsGridview(IList<FieldMapping> fieldMappings)
+        //{
+        //    fieldMappingsDataGridView.Rows.Clear();
+
+        //    foreach (var field in fieldMappings)
+        //    {
+        //        int fieldIndex = fieldMappingsDataGridView.Rows.Add(GridViewHelper.MapObjectToDataGridRowForUi(fieldMappingsDataGridView, field));
+        //        fieldMappingsDataGridView.Rows[fieldIndex].Tag = field;
+        //    }
+        //}
+
+
+
+        private FieldMapping MapDgRowToFieldDataObject(DataGridViewRow row)
         {
-            object[] response = new object[fieldMappingsDataGridView.Columns.Count];
-
-
-            for (int i = 0; i < fieldMappingsDataGridView.Columns.Count; i++)
-            {
-                var column = fieldMappingsDataGridView.Columns[i];
-                response[i] = ReflectHelper.GetPropValue(field, column.Name);
-            }
-
-            return response;
-        }
-
-        private FieldData MapDgRowToFieldDataObject(DataGridViewRow row)
-        {
-            FieldData result = null;
+            FieldMapping result = null;
 
             if (row.Tag != null)
             {
-                result = (FieldData)row.Tag;
+                result = (FieldMapping)row.Tag;
             }
             else
             {
                 // SP - means this is a newlyl created field data
-                result = new FieldData();
+                result = new FieldMapping();
 
                 if (TheDocument != null)
                     result.DocumentId = TheDocument.Id;
@@ -170,9 +153,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         }
 
-        private IList<FieldData> GetFieldMappingsFromUiDataGrid()
+        private IList<FieldMapping> GetFieldMappingsFromUiDataGrid()
         {
-            List<FieldData> result = new List<FieldData>();
+            List<FieldMapping> result = new List<FieldMapping>();
 
             for (int i = 0; i < fieldMappingsDataGridView.Rows.Count; i++)
             {
@@ -230,12 +213,12 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             foreach (var field in newFieldDataMaps)
                 TheDocument.FieldMappings.Add(field);
 
-            this.LoanFieldsGridview(TheDocument.FieldMappings);
+            GridViewHelper.LoadListObjectsToGridview(fieldMappingsDataGridView, TheDocument.FieldMappings);
         }
 
-        private List<FieldData> ConvertClipboardToFieldDataMappings(out List<Exception> errors)
+        private List<FieldMapping> ConvertClipboardToFieldDataMappings(out List<Exception> errors)
         {
-            List<FieldData> result = new List<FieldData>();
+            List<FieldMapping> result = new List<FieldMapping>();
             errors = new List<Exception>();
             string[] pastedRows = GridViewHelper.GetPastedRowsFromClipboard();
             if (pastedRows == null)
@@ -259,7 +242,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             return result;
         }
 
-        private void ValidateFieldMapping(FieldData newFieldMapping)
+        private void ValidateFieldMapping(FieldMapping newFieldMapping)
         {
             //SP - if required property does not have value; will throw seralizer exception 
             JsonConvert.SerializeObject(newFieldMapping);
@@ -279,9 +262,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         }
 
-        private FieldData ConvertClipboardRowToFieldDataMapping(string pastedRow)
+        private FieldMapping ConvertClipboardRowToFieldDataMapping(string pastedRow)
         {
-            var result = new FieldData();
+            var result = new FieldMapping();
             var pastedRowValues = pastedRow.Split(new char[] { '\t' });
 
             for (int i = 0; i < pastedRowValues.Count(); i++)

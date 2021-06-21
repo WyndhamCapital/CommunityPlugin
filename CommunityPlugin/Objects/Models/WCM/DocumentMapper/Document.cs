@@ -9,7 +9,7 @@ namespace CommunityPlugin.Objects.Models.WCM.DocumentMapper
     {
         public Document()
         {
-            FieldMappings = new List<FieldData>();
+            FieldMappings = new List<FieldMapping>();
         }
 
         public int Id { get; set; }
@@ -21,7 +21,7 @@ namespace CommunityPlugin.Objects.Models.WCM.DocumentMapper
 
         public string EncompassEfolderName { get; set; }
 
-        public IList<FieldData> FieldMappings { get; set; }
+        public IList<FieldMapping> FieldMappings { get; set; }
 
     }
 }

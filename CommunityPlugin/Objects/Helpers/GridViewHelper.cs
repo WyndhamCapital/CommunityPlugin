@@ -8,6 +8,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommunityPlugin.Objects.Models.WCM.FieldExtraction;
+using EllieMae.EMLite.ClientServer;
 
 namespace CommunityPlugin.Objects.Helpers
 {
@@ -26,64 +28,97 @@ namespace CommunityPlugin.Objects.Helpers
             {
                 return new DataGridViewCheckBoxColumn();
             }
+            // SP - custom object is property in classified doc for data extraction
+            // for UI, we are going to present the number of fields
+            else if (propertyType == typeof(IEnumerable<IFieldData>))
+            {
+                return new DataGridViewTextBoxColumn();
+            }
             else
             {
                 throw new NotImplementedException();
             }
         }
 
+        public static object[] MapObjectToDataGridRowForUi(DataGridView gridView, object objectToMap)
+        {
+            object[] result = new object[gridView.Columns.Count];
+
+
+            for (int i = 0; i < gridView.Columns.Count; i++)
+            {
+                var column = gridView.Columns[i];
+                result[i] = ReflectHelper.GetPropValue(objectToMap, column.Name);
+            }
+
+            return result;
+        }
+
         public static List<DataGridViewColumn> CreateColumnHeadersFromType(Type headerType, Action<DataGridViewColumn> customizedColumnFuction = null)
         {
             List<DataGridViewColumn> result = new List<DataGridViewColumn>();
 
-            var properties = headerType.GetProperties();
-            foreach (var property in properties)
+            var interfaceTypes = headerType.GetInterfaces().ToList();
+            List<Type> allTypes = new List<Type>();
+            allTypes.AddRange(allTypes);
+            allTypes.Add(headerType);
+
+            foreach (var type in allTypes)
             {
-                if (property.Name.Equals("RuntimePropertyInfo", StringComparison.OrdinalIgnoreCase))
-                    continue;
-                
-                var column = GetColumnType(property.PropertyType);
-                column.Name = property.Name;
-
-                var uiMap = property.GetCustomAttribute(typeof(UIMapAttribute)) as UIMapAttribute;
-
-                if (uiMap == null)
+                var properties = type.GetProperties();
+                foreach (var property in properties)
                 {
-                    // use property name
-                    column.HeaderText = property.Name;
-                }
-                else
-                {
-                    // use ui map name
-                    // uiMap.DisplayName
-                    if (string.IsNullOrWhiteSpace(uiMap.DisplayName))
+                    if (property.Name.Equals("RuntimePropertyInfo", StringComparison.OrdinalIgnoreCase))
+                        continue;
+
+                    var uiMap = property.GetCustomAttribute(typeof(UIMapAttribute)) as UIMapAttribute;
+                    if (uiMap != null && uiMap.Ignore)
                     {
+                        continue; // go to next proprety
+                    }
+
+                    var column = GetColumnType(property.PropertyType);
+                    column.Name = property.Name;
+
+                    if (uiMap == null)
+                    {
+                        // use property name
                         column.HeaderText = property.Name;
                     }
                     else
                     {
-                        column.HeaderText = uiMap.DisplayName;
+                        // use ui map name
+                        // uiMap.DisplayName
+                        if (string.IsNullOrWhiteSpace(uiMap.DisplayName))
+                        {
+                            column.HeaderText = property.Name;
+                        }
+                        else
+                        {
+                            column.HeaderText = uiMap.DisplayName;
+                        }
+
+                        column.Visible = uiMap.Editable;
+
                     }
 
-                    column.Visible = uiMap.Editable;
-
-                }
-
-                if (customizedColumnFuction != null)
-                {
-                    try
+                    if (customizedColumnFuction != null)
                     {
-                        customizedColumnFuction(column);
+                        try
+                        {
+                            customizedColumnFuction(column);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new NotImplementedException();
+                            // log info
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        throw new NotImplementedException();
-                        // log info
-                    }
-                }
 
-                result.Add(column);
+                    result.Add(column);
+                }
             }
+     
 
             return result;
         }
@@ -124,6 +159,58 @@ namespace CommunityPlugin.Objects.Helpers
             }
 
             return result;
+        }
+
+        public static void LoadListObjectsToGridview<T>(DataGridView gridview, IList<T> listObjects)
+        {
+            gridview.Rows.Clear();
+
+            foreach (var obj in listObjects)
+            {
+                int fieldIndex = gridview.Rows.Add(GridViewHelper.MapObjectToDataGridRowForUi(gridview, obj));
+                gridview.Rows[fieldIndex].Tag = obj;
+            }
+        }
+
+        public static T GetCurrentGridRowTag<T>(DataGridView dgv, out string errorMsg)
+        {
+            errorMsg = string.Empty;
+            var currentRow = GetCurrentGridRow(dgv, out errorMsg);
+            if (currentRow == null)
+            {
+                return default(T);
+            }
+
+            return (T)currentRow.Tag;
+        }
+
+        public static DataGridViewRow GetCurrentGridRow(DataGridView dgv, out string errorMsg)
+        {
+            errorMsg = null;
+
+            var selectedCell = dgv.CurrentCell;
+            if (selectedCell == null)
+            {
+                errorMsg = "No Row is selected, please try again.";
+                return null;
+            }
+
+            DataGridViewRow row = dgv.Rows[dgv.CurrentCell.RowIndex];
+            if (row.IsNewRow)
+            {
+                errorMsg = "No Row is selected, please try again.";
+                return null;
+            }
+
+            return row;
+        }
+
+        public static void LoadFieldMappingColumns<T>(DataGridView gridView)
+        {
+            var columnHeaders = GridViewHelper.CreateColumnHeadersFromType(typeof(T), (column) =>
+                column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells);
+
+            gridView.Columns.AddRange(columnHeaders.ToArray());
         }
     }
 }
