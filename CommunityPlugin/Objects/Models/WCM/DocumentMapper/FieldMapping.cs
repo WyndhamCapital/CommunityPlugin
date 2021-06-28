@@ -11,10 +11,12 @@ namespace CommunityPlugin.Objects.Models.WCM.DocumentMapper
         [JsonProperty(Required = Required.Always)]
         public string ExternalFieldId { get; set; }
 
-        [UIMap(DisplayName = "Encompass Field ID")]
-        [JsonProperty(Required = Required.Always)]
+        [UIMap(DisplayName = "Current Encompass Value")]
+        public string EncompassFieldIdCurrentValue { get; set; }
 
-        public string EncompassFieldId { get; set; }
+        [UIMap(DisplayName = "Insert Field Value")]
+        public string EncompassFieldIdInsertValue { get; set; }
+
 
         [UIMap(Editable = false)]
         public int Id { get; set; }

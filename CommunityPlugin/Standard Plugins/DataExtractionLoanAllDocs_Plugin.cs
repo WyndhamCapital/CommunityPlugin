@@ -22,6 +22,7 @@ namespace CommunityPlugin.Standard_Plugins
         private IEnumerable<IClassifiedDocument> _fieldExtractedDocs;
         private List<Document> _dataExtractionDocumentMaps;
         private static readonly WcmSettings WcmConfig = CDOHelper.CDO.CommunitySettings.WcmSettings;
+        private Task getDocumentMapsTask;
 
         public override bool Authorized()
         {
@@ -31,7 +32,7 @@ namespace CommunityPlugin.Standard_Plugins
 
         public override void Login(object sender, EventArgs e)
         {
-            new TaskFactory().StartNew(() =>
+            getDocumentMapsTask = new TaskFactory().StartNew(() =>
             {
                 _dataExtractionDocumentMaps =
                     WcmHelpers.GetMapperDocuments(WcmConfig.DocumentMapperAiExternalSourceId, WcmConfig);
@@ -40,13 +41,14 @@ namespace CommunityPlugin.Standard_Plugins
 
         public override void LoanOpened(object sender, EventArgs e)
         {
+            getDocumentMapsTask.Wait();
             // get all field extraction for loans
             LoadExtractedDataFieldsForm();
         }
 
         private void LoadExtractedDataFieldsForm()
         {
-            Task getExtractedDocsTask = new TaskFactory().StartNew(() =>
+            new TaskFactory().StartNew(() =>
             {
                 GetLoanExtractedDataFieldsAsync();
 

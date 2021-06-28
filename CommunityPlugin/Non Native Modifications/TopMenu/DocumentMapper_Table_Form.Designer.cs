@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    partial class DocumentMapper_Table_Form
+    partial class DocumentMapperTableForm
     {
         /// <summary>
         /// Required designer variable.
@@ -33,7 +33,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentMapper_Table_Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentMapperTableForm));
             this.externalSourcesComboBox = new System.Windows.Forms.ComboBox();
             this.documentsDataGridView = new System.Windows.Forms.DataGridView();
             this.searchTextBox = new System.Windows.Forms.TextBox();
@@ -107,7 +107,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.Controls.Add(this.searchTextBox);
             this.Controls.Add(this.documentsDataGridView);
             this.Controls.Add(this.externalSourcesComboBox);
-            this.Name = "DocumentMapper_Table_Form";
+            this.Name = "DocumentMapperTableForm";
             this.Text = "Doument Mapper Docs";
             this.Load += new System.EventHandler(this.DocumentMapper_Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.documentsDataGridView)).EndInit();

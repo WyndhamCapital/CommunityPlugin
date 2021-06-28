@@ -60,12 +60,7 @@ namespace CommunityPlugin.Standard_Plugins
             }
         }
 
-        private void DocumentsDropDownBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var selectedDocument = (IClassifiedDocument)DocumentsDropDownBox.SelectedItem;
 
-            LoadDocument(selectedDocument);
-        }
 
         private void LoadDocument(IClassifiedDocument documentToLoad)
         {
@@ -97,9 +92,9 @@ namespace CommunityPlugin.Standard_Plugins
             if (fieldMap != null)
             {
                 result.FieldMap = fieldMap;
-                result.EncompassFieldId = fieldMap.EncompassFieldId;
+                result.EncompassFieldId = fieldMap.EncompassFieldIdCurrentValue;
 
-                var encompassField = EncompassApplication.CurrentLoan.Fields[fieldMap.EncompassFieldId];
+                var encompassField = EncompassApplication.CurrentLoan.Fields[fieldMap.EncompassFieldIdCurrentValue];
                 if (encompassField != null)
                 {
                     result.EncompassFieldDescription = encompassField.Descriptor.Description;

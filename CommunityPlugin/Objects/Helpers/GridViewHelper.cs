@@ -60,7 +60,7 @@ namespace CommunityPlugin.Objects.Helpers
 
             var interfaceTypes = headerType.GetInterfaces().ToList();
             List<Type> allTypes = new List<Type>();
-            allTypes.AddRange(allTypes);
+            allTypes.AddRange(interfaceTypes);
             allTypes.Add(headerType);
 
             foreach (var type in allTypes)
@@ -123,6 +123,28 @@ namespace CommunityPlugin.Objects.Helpers
             return result;
         }
 
+        public static T SetRowObjectPropertiesFromGridViewColumns<T>(T result, DataGridViewRow row, DataGridView dataGridView)
+        {
+            foreach (PropertyInfo propertyInfo in result.GetType().GetProperties())
+            {
+                // SP - check if a column with this name exists first
+                var column = GridViewHelper.GetColumnByName(dataGridView, propertyInfo.Name);
+                if (column != null)
+                {
+                    var value = row.Cells[propertyInfo.Name].Value;
+                    if (propertyInfo != null && propertyInfo.CanWrite)
+                    {
+                        if (value == null)
+                            propertyInfo.SetValue(result, null, null);
+
+                        else if (value != null && value != System.DBNull.Value)
+                            propertyInfo.SetValue(result, value, null);
+                    }
+                }
+            }
+
+            return result;
+        }
         internal static DataGridViewColumn GetColumnByName(DataGridView gridView, string columnName)
         {
             for (int i = 0; i < gridView.Columns.Count; i++)

@@ -7,21 +7,27 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CommunityPlugin.Objects.Models.WCM.Helpers;
+using EllieMae.EMLite.DataEngine;
 using WyndhamLib.Authentication;
+using WyndhamLibGlobal;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public partial class DocumentMapper_Table_Form : Form
+    public partial class DocumentMapperTableForm : Form
     {
         private static readonly WcmSettings WcmSettings = CDOHelper.CDO.CommunitySettings.WcmSettings;
-        private static List<ExternalDocumentSource> ExternalImportSources;
-        private static List<Document> MapperDocuments = new List<Document>();
-
-        public DocumentMapper_Table_Form()
+        private static List<ExternalDocumentSource> _externalImportSources;
+        private static List<Document> _mapperDocuments = new List<Document>();
+        private CustomFieldsInfo _encompassCustomFields;
+        private FieldDefinitionCollection _encompassStandardFields;
+        public DocumentMapperTableForm()
         {
             InitializeComponent();
         }
@@ -29,17 +35,37 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private void DocumentMapper_Form_Load(object sender, EventArgs e)
         {
             LoadExternalSoures();
+
+            LoadEncompassFields();
+        }
+
+        private void LoadEncompassFields()
+        {
+            new TaskFactory().StartNew(() =>
+            {
+                _encompassCustomFields = EncompassHelper.SessionObjects.ConfigurationManager.GetLoanCustomFields();
+            });
+
+            new TaskFactory().StartNew(() =>
+            {
+                _encompassStandardFields =
+                    EncompassHelper.SessionObjects.LoanManager.GetStandardFields().AllFields;
+            });
         }
 
         private void LoadExternalSoures()
         {
-            Task loadSourcesTask = new TaskFactory().StartNew(async () =>
+            var waitDialog = new PleaseWaitDialog(this);
+
+            new TaskFactory().StartNew(async () =>
             {
+                waitDialog.Progress.Report("Loading Mapper Sources...");
                 await GetExternalSourcesAsync();
 
             }).ContinueWith((x) =>
             {
                 LoadExternalSourcesInDropDown();
+                waitDialog.PleaseWaitForm.Close();
             });
         }
 
@@ -57,7 +83,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             externalSourcesComboBox.DisplayMember = "SourceName";
             externalSourcesComboBox.ValueMember = "Id";
-            externalSourcesComboBox.DataSource = ExternalImportSources;
+            externalSourcesComboBox.DataSource = _externalImportSources;
 
             externalSourcesComboBox.SelectedIndex = -1;
 
@@ -68,13 +94,38 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void ExternalSourcesComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ExternalDocumentSource selectedSource = GetExternalSourceSelected();
-                
-            List<Document> docs = WcmHelpers.GetMapperDocuments(selectedSource.Id, WcmSettings);
-            MapperDocuments = docs;
 
+            var waitDialog = new PleaseWaitDialog(this);
+
+            ExternalDocumentSource selectedSource = GetExternalSourceSelected();
+            waitDialog.Progress.Report($"Retrieving docs for '{selectedSource.SourceName}'...");
+
+            List<Document> docs = WcmHelpers.GetMapperDocuments(selectedSource.Id, WcmSettings);
+
+            _mapperDocuments = docs;
             UpdateDocsGridview(docs);
             EnableControls();
+
+            waitDialog.PleaseWaitForm.Close();
+
+            //new TaskFactory().StartNew(() =>
+            //{
+            //    ExternalDocumentSource selectedSource = GetExternalSourceSelected();
+            //    waitDialog.Progress.Report($"Retrieving docs for '{selectedSource.SourceName}'...");
+
+            //    docs = WcmHelpers.GetMapperDocuments(selectedSource.Id, WcmSettings);
+
+            //}).ContinueWith((x) =>
+            //{
+            //    waitDialog.PleaseWaitForm.Close();
+
+            //    _mapperDocuments = docs;
+
+            //    UpdateDocsGridview(docs);
+            //    EnableControls();
+
+            //});
+
         }
 
         private void EnableControls()
@@ -98,7 +149,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             documentsDataGridView.DataSource = null;
             documentsDataGridView.DataSource = BuildDataTable(docs);
-           
+
             // Automatically resize the visible rows.
             documentsDataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
@@ -121,7 +172,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                               Enable = t.Enable
                           };
 
-          return  ExtensionMethods.ToDataTable(columns.ToList());
+            return ExtensionMethods.ToDataTable(columns.ToList());
         }
 
 
@@ -129,12 +180,11 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         {
             try
             {
-
                 HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(WcmSettings.GetDocumentMapperExternalSourcesUrl);
                 var rawJson = await httpResponse.Content.ReadAsStringAsync();
                 if (httpResponse.IsSuccessStatusCode)
                 {
-                    ExternalImportSources = JsonConvert.DeserializeObject<List<ExternalDocumentSource>>(rawJson);
+                    _externalImportSources = JsonConvert.DeserializeObject<List<ExternalDocumentSource>>(rawJson);
                 }
                 else
                 {
@@ -163,20 +213,20 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             string errorMsg = null;
             int? selectedDocId = GetCurrentSelectedDocId(out errorMsg);
 
-            if(selectedDocId.HasValue == false)
+            if (selectedDocId.HasValue == false)
             {
                 MessageBox.Show(errorMsg);
                 return;
             }
 
-            var selectedDoc = MapperDocuments.FirstOrDefault(x => x.Id.Equals(selectedDocId.Value));
-            if(selectedDoc == null)
+            var selectedDoc = _mapperDocuments.FirstOrDefault(x => x.Id.Equals(selectedDocId.Value));
+            if (selectedDoc == null)
             {
                 MessageBox.Show($"Error. No Doc found with id '{selectedDocId}'. Restart Encompass please!");
                 return;
             }
 
-            using (var editDocForm = new DocumentMapper_SingleDoc_Form(selectedDoc, WcmSettings))
+            using (var editDocForm = new DocumentMapperSingleDocForm(selectedDoc, WcmSettings, _encompassCustomFields, _encompassStandardFields))
             {
                 if (editDocForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
                     return;
@@ -190,13 +240,13 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private void UpdateDocumentInGridview(Document docToUpdate)
         {
             // SP - if the doc already exists in list, remove current, and add new/updated doc
-            var currentDoc = MapperDocuments.FirstOrDefault(x => x.Id.Equals(docToUpdate.Id));
+            var currentDoc = _mapperDocuments.FirstOrDefault(x => x.Id.Equals(docToUpdate.Id));
             if (currentDoc != null)
-                MapperDocuments.Remove(currentDoc);
+                _mapperDocuments.Remove(currentDoc);
 
-            MapperDocuments.Add(docToUpdate);
+            _mapperDocuments.Add(docToUpdate);
 
-            UpdateDocsGridview(MapperDocuments);
+            UpdateDocsGridview(_mapperDocuments);
         }
 
         private int? GetCurrentSelectedDocId(out string errorMsg)
@@ -233,7 +283,11 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 return;
             }
 
-            using (var editDocForm = new DocumentMapper_SingleDoc_Form(sourceSelected.Id, WcmSettings))
+            using (var editDocForm = new DocumentMapperSingleDocForm(
+                sourceSelected.Id,
+                WcmSettings,
+                _encompassCustomFields,
+                _encompassStandardFields))
             {
                 if (editDocForm.ShowDialog((IWin32Window)this.ParentForm) != DialogResult.OK)
                     return;
@@ -250,7 +304,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private List<Document> SearchDocs()
         {
-            List<Document> response = MapperDocuments;
+            List<Document> response = _mapperDocuments;
 
             if (enabledOnlyDocsCheckBox.Checked)
             {
@@ -261,9 +315,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             string searchWord = searchTextBox.Text.ToLower();
             if (string.IsNullOrEmpty(searchWord) == false)
             {
-                 response = response
-                    .Where(x => x.EncompassEfolderName.ToLower().Contains(searchWord) ||
-                    x.ExternalSystemDocumentId.ToLower().Contains(searchWord)).ToList();
+                response = response
+                   .Where(x => x.EncompassEfolderName.ToLower().Contains(searchWord) ||
+                   x.ExternalSystemDocumentId.ToLower().Contains(searchWord)).ToList();
             }
 
             return response;

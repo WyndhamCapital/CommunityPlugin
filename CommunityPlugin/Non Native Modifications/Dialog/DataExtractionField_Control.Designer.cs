@@ -37,31 +37,31 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
             // 
             // loanValueTextBox
             // 
-            this.loanValueTextBox.Location = new System.Drawing.Point(203, 18);
+            this.loanValueTextBox.Location = new System.Drawing.Point(203, 0);
             this.loanValueTextBox.Name = "loanValueTextBox";
             this.loanValueTextBox.Size = new System.Drawing.Size(138, 20);
             this.loanValueTextBox.TabIndex = 0;
             // 
             // dataExtractionValueTextBox
             // 
-            this.dataExtractionValueTextBox.Location = new System.Drawing.Point(347, 18);
+            this.dataExtractionValueTextBox.Location = new System.Drawing.Point(347, 0);
             this.dataExtractionValueTextBox.Name = "dataExtractionValueTextBox";
             this.dataExtractionValueTextBox.Size = new System.Drawing.Size(138, 20);
             this.dataExtractionValueTextBox.TabIndex = 1;
             // 
             // encompassFieldDescrLabel
             // 
-            this.encompassFieldDescrLabel.Location = new System.Drawing.Point(13, 21);
+            this.encompassFieldDescrLabel.Location = new System.Drawing.Point(10, 3);
             this.encompassFieldDescrLabel.Name = "encompassFieldDescrLabel";
-            this.encompassFieldDescrLabel.Size = new System.Drawing.Size(177, 40);
+            this.encompassFieldDescrLabel.Size = new System.Drawing.Size(187, 28);
             this.encompassFieldDescrLabel.TabIndex = 2;
             this.encompassFieldDescrLabel.Text = "encompassFieldDescrLabel";
             // 
             // dataExtractionFieldDescrLabel
             // 
-            this.dataExtractionFieldDescrLabel.Location = new System.Drawing.Point(13, 61);
+            this.dataExtractionFieldDescrLabel.Location = new System.Drawing.Point(491, 0);
             this.dataExtractionFieldDescrLabel.Name = "dataExtractionFieldDescrLabel";
-            this.dataExtractionFieldDescrLabel.Size = new System.Drawing.Size(177, 40);
+            this.dataExtractionFieldDescrLabel.Size = new System.Drawing.Size(187, 28);
             this.dataExtractionFieldDescrLabel.TabIndex = 3;
             this.dataExtractionFieldDescrLabel.Text = "dataExtractionFieldDescrLabel";
             // 
@@ -74,7 +74,7 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
             this.Controls.Add(this.dataExtractionValueTextBox);
             this.Controls.Add(this.loanValueTextBox);
             this.Name = "DataExtractionField_Control";
-            this.Size = new System.Drawing.Size(499, 107);
+            this.Size = new System.Drawing.Size(722, 30);
             this.ResumeLayout(false);
             this.PerformLayout();
 
