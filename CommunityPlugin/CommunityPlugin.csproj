@@ -495,6 +495,7 @@
     <Compile Include="Objects\Models\WCM\FieldExtraction\IFieldData.cs" />
     <Compile Include="Objects\Models\WCM\FieldExtraction\IOriginalDocument.cs" />
     <Compile Include="Objects\Models\WCM\FieldExtraction\OriginalDocument.cs" />
+    <Compile Include="Objects\Models\WCM\PricingAlertAudit\PricingAlertField.cs" />
     <Compile Include="Objects\Plugin.cs" />
     <Compile Include="Objects\ImplementationException.cs" />
     <Compile Include="Objects\Logger.cs" />
@@ -525,6 +526,7 @@
     <Compile Include="Standard Plugins\LiveTestUser.cs" />
     <Compile Include="Standard Plugins\OpeneFolderDocument.cs" />
     <Compile Include="Standard Plugins\OpenInputForm.cs" />
+    <Compile Include="Standard Plugins\PricingAlertAudit.cs" />
     <Compile Include="Standard Plugins\VirtualFields.cs" />
   </ItemGroup>
   <ItemGroup>

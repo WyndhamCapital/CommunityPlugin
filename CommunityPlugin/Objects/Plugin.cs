@@ -213,7 +213,7 @@ namespace CommunityPlugin.Objects
             BeforeMilestoneCompleted(sender, e);
         }
 
-        public virtual void Committed(object sender, EventArgs e)
+        public virtual void Committed(object sender, PersistentObjectEventArgs e)
         {
             throw new ImplementationException(GetType().Name, nameof(ICommitted), nameof(Committed));
         }

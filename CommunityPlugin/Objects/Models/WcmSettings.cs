@@ -1,4 +1,7 @@
-﻿namespace CommunityPlugin.Objects.Models
+﻿using System.Collections.Generic;
+using CommunityPlugin.Objects.Models.WCM.PricingAlertAudit;
+
+namespace CommunityPlugin.Objects.Models
 {
     public class WcmSettings
     {
@@ -16,6 +19,9 @@
         public string UpdateDocExportStatusBlendUri { get; set; }
 
         public string GetFieldExtractionDataForLoanUrl { get; set; }
+
+        public List<PricingAlertField> PricingAlertAuditFields { get; set; }
+
 
         // DB id of ai provider; used to query for document mappings
         public int DocumentMapperAiExternalSourceId { get; set; }
