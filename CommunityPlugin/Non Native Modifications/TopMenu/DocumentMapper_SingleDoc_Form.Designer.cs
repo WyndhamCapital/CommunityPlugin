@@ -1,7 +1,7 @@
 ﻿
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    partial class DocumentMapper_SingleDoc_Form
+    partial class DocumentMapperSingleDocForm
     {
         /// <summary>
         /// Required designer variable.
@@ -88,7 +88,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             // 
             // button_ApplyChanges
             // 
-            this.button_ApplyChanges.Location = new System.Drawing.Point(108, 150);
+            this.button_ApplyChanges.Location = new System.Drawing.Point(109, 189);
             this.button_ApplyChanges.Name = "button_ApplyChanges";
             this.button_ApplyChanges.Size = new System.Drawing.Size(75, 24);
             this.button_ApplyChanges.TabIndex = 32;
@@ -104,12 +104,12 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.fieldMappingsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.fieldMappingsDataGridView.ContextMenuStrip = this.fieldMappingContextMenuStrip;
             this.fieldMappingsDataGridView.Location = new System.Drawing.Point(280, 19);
-            this.fieldMappingsDataGridView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.fieldMappingsDataGridView.Margin = new System.Windows.Forms.Padding(2);
             this.fieldMappingsDataGridView.Name = "fieldMappingsDataGridView";
             this.fieldMappingsDataGridView.RowHeadersVisible = false;
             this.fieldMappingsDataGridView.RowHeadersWidth = 51;
             this.fieldMappingsDataGridView.RowTemplate.Height = 24;
-            this.fieldMappingsDataGridView.Size = new System.Drawing.Size(289, 155);
+            this.fieldMappingsDataGridView.Size = new System.Drawing.Size(541, 197);
             this.fieldMappingsDataGridView.TabIndex = 33;
             // 
             // fieldMappingContextMenuStrip
@@ -136,7 +136,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             // 
             // button_Cancel
             // 
-            this.button_Cancel.Location = new System.Drawing.Point(189, 150);
+            this.button_Cancel.Location = new System.Drawing.Point(190, 189);
             this.button_Cancel.Name = "button_Cancel";
             this.button_Cancel.Size = new System.Drawing.Size(77, 24);
             this.button_Cancel.TabIndex = 34;
@@ -148,7 +148,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(578, 183);
+            this.ClientSize = new System.Drawing.Size(830, 225);
             this.Controls.Add(this.button_Cancel);
             this.Controls.Add(this.fieldMappingsDataGridView);
             this.Controls.Add(this.button_ApplyChanges);
@@ -157,8 +157,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.externalDocId_textBox);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.Name = "DocumentMapper_SingleDoc_Form";
+            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Name = "DocumentMapperSingleDocForm";
             this.Text = "Edit Document Mapper Doc";
             ((System.ComponentModel.ISupportInitialize)(this.fieldMappingsDataGridView)).EndInit();
             this.fieldMappingContextMenuStrip.ResumeLayout(false);

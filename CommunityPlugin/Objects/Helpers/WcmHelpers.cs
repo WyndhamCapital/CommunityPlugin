@@ -1,5 +1,6 @@
 ﻿using CommunityPlugin.Objects.Models;
 using CommunityPlugin.Objects.Models.WCM.DocumentImporter;
+using CommunityPlugin.Objects.Models.WCM.DocumentMapper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -33,26 +34,24 @@ namespace CommunityPlugin.Objects.Helpers
             }
 
         }
-   
-    public static DataGridViewRow GetCurrentGridRow(DataGridView dgv, out string errorMsg)
+
+        public static List<Document> GetMapperDocuments(int externalSourceId, WcmSettings wcmConfig)
         {
-            errorMsg = null;
+            string finalUri = $"{wcmConfig.GetDocumentMapperDocumentsUrl}?externalSourceId={externalSourceId}&includeFieldMappings=true&enabledOnlyDocs={false}";
+            HttpResponseMessage httpResponse = WyndhamClientManager.GetAuthHttpClient().GetResponseMessage(finalUri);
 
-            var selectedCell = dgv.CurrentCell;
-            if (selectedCell == null)
+            if (httpResponse.IsSuccessStatusCode)
             {
-                errorMsg = "No Row is selected, please try again.";
-                return null;
+                Task<string> responseString = httpResponse.Content.ReadAsStringAsync();
+                var docs = JsonConvert.DeserializeObject<List<Document>>(responseString.Result);
+                return docs;
             }
-
-            DataGridViewRow row = dgv.Rows[dgv.CurrentCell.RowIndex];
-            if (row.IsNewRow)
+            else
             {
-                errorMsg = "No Row is selected, please try again.";
-                return null;
+                throw new Exception($"Error retrieving external source documents!'{httpResponse.StatusCode}'");
             }
-
-            return row;
         }
+
+
     }
 }

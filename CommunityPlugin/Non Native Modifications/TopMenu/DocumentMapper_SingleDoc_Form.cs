@@ -11,45 +11,49 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EllieMae.EMLite.DataEngine;
 using WyndhamLib.Authentication;
+using System.IO;
 
 namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 {
-    public partial class DocumentMapper_SingleDoc_Form : Form
+    public partial class DocumentMapperSingleDocForm : Form
     {
         public Document TheDocument;
-        private readonly int? ExternalSourceId;
-        private readonly WcmSettings Settings;
+        private readonly int? _externalSourceId;
+        private readonly WcmSettings _settings;
+        private CustomFieldsInfo _encompassCustomFields;
+        private List<FieldDefinition> _encompassStandardCommonFields;
 
-        public DocumentMapper_SingleDoc_Form(Document document, WcmSettings wcmSettings)
+        public DocumentMapperSingleDocForm(Document document,
+            WcmSettings wcmSettings,
+            CustomFieldsInfo encompassCustomFields,
+            List<FieldDefinition> encompassStandardFields)
         {
             InitializeComponent();
 
-            Settings = wcmSettings;
+            _settings = wcmSettings;
             TheDocument = document;
+            _encompassStandardCommonFields = encompassStandardFields;
+            _encompassCustomFields = encompassCustomFields;
 
-            LoadFieldMappingColumns();
+            GridViewHelper.LoadFieldMappingColumns<FieldMapping>(fieldMappingsDataGridView);
             MapDocumentToUi();
         }
 
 
-
-
-        public void LoadFieldMappingColumns()
-        {
-            var columnHeaders = GridViewHelper.CreateColumnHeadersFromType(typeof(FieldData), (column) =>
-            column.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells);
-
-            fieldMappingsDataGridView.Columns.AddRange(columnHeaders.ToArray());
-        }
-
-        public DocumentMapper_SingleDoc_Form(int externalSourceId, WcmSettings wcmSettings)
+        public DocumentMapperSingleDocForm(int externalSourceId,
+            WcmSettings wcmSettings,
+            CustomFieldsInfo encompassCustomFields,
+            List<FieldDefinition> encompassStandardFields)
         {
             InitializeComponent();
-            LoadFieldMappingColumns();
+            GridViewHelper.LoadFieldMappingColumns<FieldMapping>(fieldMappingsDataGridView);
 
-            Settings = wcmSettings;
-            ExternalSourceId = externalSourceId;
+            _settings = wcmSettings;
+            _encompassStandardCommonFields = encompassStandardFields;
+            _encompassCustomFields = encompassCustomFields;
+            _externalSourceId = externalSourceId;
         }
 
         private void MapDocumentToUi()
@@ -58,71 +62,32 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             externalDocId_textBox.Text = TheDocument.ExternalSystemDocumentId;
             enableChckBox.Checked = TheDocument.Enable;
 
-            this.LoanFieldsGridview(TheDocument.FieldMappings);
-        }
-
-        private void LoanFieldsGridview(IList<FieldData> fieldMappings)
-        {
-            fieldMappingsDataGridView.Rows.Clear();
-
-            foreach (var field in fieldMappings)
-            {
-                int fieldIndex = fieldMappingsDataGridView.Rows.Add(MapFieldMappingToDataGridRowForUi(field));
-                fieldMappingsDataGridView.Rows[fieldIndex].Tag = field;
-            }
+            GridViewHelper.LoadListObjectsToGridview(fieldMappingsDataGridView, TheDocument.FieldMappings);
         }
 
 
-
-        private object[] MapFieldMappingToDataGridRowForUi(FieldData field)
+        private FieldMapping MapDgRowToFieldDataObject(DataGridViewRow row)
         {
-            object[] response = new object[fieldMappingsDataGridView.Columns.Count];
-
-
-            for (int i = 0; i < fieldMappingsDataGridView.Columns.Count; i++)
-            {
-                var column = fieldMappingsDataGridView.Columns[i];
-                response[i] = ReflectHelper.GetPropValue(field, column.Name);
-            }
-
-            return response;
-        }
-
-        private FieldData MapDgRowToFieldDataObject(DataGridViewRow row)
-        {
-            FieldData result = null;
+            FieldMapping result = null;
 
             if (row.Tag != null)
             {
-                result = (FieldData)row.Tag;
+                result = (FieldMapping)row.Tag;
             }
             else
             {
                 // SP - means this is a newlyl created field data
-                result = new FieldData();
+                result = new FieldMapping();
 
                 if (TheDocument != null)
                     result.DocumentId = TheDocument.Id;
             }
 
-            foreach (PropertyInfo propertyInfo in result.GetType().GetProperties())
-            {
-                // SP - check if a column with this name exists first
-                var column = GridViewHelper.GetColumnByName(fieldMappingsDataGridView, propertyInfo.Name);
-                if (column != null)
-                {
-                    var value = row.Cells[propertyInfo.Name].Value;
-                    if (propertyInfo != null && propertyInfo.CanWrite)
-                    {
-                        if (value != null && value != System.DBNull.Value)
-                            propertyInfo.SetValue(result, value, null);
-                    }
-                }
-            }
-
+            result = GridViewHelper.SetRowObjectPropertiesFromGridViewColumns(result, row, fieldMappingsDataGridView);
 
             return result;
         }
+
 
 
         private void button_ApplyChanges_Click(object sender, EventArgs e)
@@ -133,7 +98,132 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.MapUiToDocument();
             this.UpdateDocumentMapperDoc();
 
+            if (!ValidateDocumentMapper())
+                return;
+
             this.DialogResult = DialogResult.OK;
+        }
+
+        private bool ValidateDocumentMapper()
+        {
+
+            if (TheDocument.FieldMappings.Any())
+            {
+
+                var currentValueFieldIds = TheDocument
+                    .FieldMappings
+                    .Select(x => x.EncompassFieldIdCurrentValue).ToList();
+
+                if (ValidateEncompassFields(currentValueFieldIds, false) == false)
+                    return false;
+
+
+                var insertValueFieldIds = TheDocument
+                    .FieldMappings
+                    .Select(x => x.EncompassFieldIdInsertValue).ToList();
+
+                // SP - for insert value Fields, we are only allowing custom fields right now
+                // the fields will be set in the API, where standard fields are set by object properties, not field ID's
+                // it's possible to add some standard fields (use contract/schema generator), and pass that to update loan
+                // but for V1, only custom fields are allowed
+                if (ValidateEncompassFields(insertValueFieldIds, true) == false)
+                    return false;
+
+            }
+
+            return true;
+        }
+
+        private bool ValidateEncompassFields(List<string> fieldIds, bool allowCustomFieldsOnly)
+        {
+            List<Exception> errors = new List<Exception>();
+            fieldIds.RemoveAll(string.IsNullOrEmpty);
+
+            // if there are no fields to validate, return true, there are no errors
+            if (fieldIds.Any() == false)
+                return true;
+
+
+            var result = true;
+
+            var customFields = fieldIds.
+                Where(x => x.StartsWith("cx.", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            List<string> customFieldErrors = ValidateEncompassCustomFields(customFields);
+            if (customFieldErrors.Any())
+            {
+                errors.Add(new Exception($"The custom fields below do NOT exist. " +
+                                         $"{Environment.NewLine + string.Join(Environment.NewLine, customFieldErrors)}"));
+            }
+
+            var standardFields = fieldIds.Except(customFields).ToList();
+            if (allowCustomFieldsOnly && standardFields.Any())
+            {
+                errors.Add(new Exception($"Only custom field are allowed; the standard fields below are present. " +
+                                         $"{Environment.NewLine + string.Join(Environment.NewLine, standardFields)}"));
+
+            }
+            else
+            {
+                // if standard fields are allowed, check if they exist
+                List<string> standardFieldErrors = ValidateEncompassStandardFields(standardFields);
+                if (standardFieldErrors.Any())
+                {
+                    errors.Add(new Exception($"The standard fields below do NOT exist. " +
+                                             $"{Environment.NewLine + string.Join(Environment.NewLine, standardFieldErrors)}"));
+                }
+            }
+
+
+            if (errors.Any())
+            {
+                MessageBox.Show(UIHelper.FormatListOfExceptionsIntoErrorMessage(errors));
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private List<string> ValidateEncompassStandardFields(List<string> fieldIds)
+        {
+            List<string> errorFields = new List<string>();
+            foreach (var fieldId in fieldIds)
+            {
+                var standardField = _encompassStandardCommonFields.FirstOrDefault(x =>
+                    x.FieldID.Equals(fieldId,
+                        StringComparison.OrdinalIgnoreCase));
+
+                // if field doesn't exist in encompass; this is a problem
+                if (standardField == null)
+                {
+                    errorFields.Add(fieldId);
+                }
+
+            }
+
+            return errorFields;
+        }
+
+        private List<string> ValidateEncompassCustomFields(List<string> encompassCustomFieldIds)
+        {
+            List<string> errorFields = new List<string>();
+            foreach (var customFieldId in encompassCustomFieldIds)
+            {
+                var encompassCustomField = _encompassCustomFields.Cast<CustomFieldInfo>().FirstOrDefault(x =>
+                    x.FieldID.Equals(customFieldId,
+                        StringComparison.OrdinalIgnoreCase));
+
+                // if field doesn't exist in encompass; this is a problem
+                if (encompassCustomField == null)
+                {
+                    errorFields.Add(customFieldId);
+                }
+
+            }
+
+            return errorFields;
         }
 
         private bool ValidateContents()
@@ -146,7 +236,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             if (string.IsNullOrEmpty(externalDocId_textBox.Text))
             {
-                MessageBox.Show("UW Condition Name is reqruired.");
+                MessageBox.Show("External Doc Id is reqruired.");
                 return false;
             }
 
@@ -159,7 +249,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             if (TheDocument == null)
             {
                 TheDocument = new Document();
-                TheDocument.ExternalDocumentSourceId = ExternalSourceId.Value;
+                TheDocument.ExternalDocumentSourceId = _externalSourceId.Value;
             }
 
             TheDocument.Enable = enableChckBox.Checked;
@@ -170,9 +260,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         }
 
-        private IList<FieldData> GetFieldMappingsFromUiDataGrid()
+        private IList<FieldMapping> GetFieldMappingsFromUiDataGrid()
         {
-            List<FieldData> result = new List<FieldData>();
+            List<FieldMapping> result = new List<FieldMapping>();
 
             for (int i = 0; i < fieldMappingsDataGridView.Rows.Count; i++)
             {
@@ -196,7 +286,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         private void UpdateDocumentMapperDoc()
         {
-            string url = $"{Settings.UpdateDocumentMapperDocumentUrl}?userId={EncompassApplication.CurrentUser.ID}";
+            string url = $"{_settings.UpdateDocumentMapperDocumentUrl}?userId={EncompassApplication.CurrentUser.ID}";
             string json = JsonConvert.SerializeObject(TheDocument);
 
             var httpResponse = WyndhamClientManager.GetAuthHttpClient().Post(url, TheDocument);
@@ -230,12 +320,12 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             foreach (var field in newFieldDataMaps)
                 TheDocument.FieldMappings.Add(field);
 
-            this.LoanFieldsGridview(TheDocument.FieldMappings);
+            GridViewHelper.LoadListObjectsToGridview(fieldMappingsDataGridView, TheDocument.FieldMappings);
         }
 
-        private List<FieldData> ConvertClipboardToFieldDataMappings(out List<Exception> errors)
+        private List<FieldMapping> ConvertClipboardToFieldDataMappings(out List<Exception> errors)
         {
-            List<FieldData> result = new List<FieldData>();
+            List<FieldMapping> result = new List<FieldMapping>();
             errors = new List<Exception>();
             string[] pastedRows = GridViewHelper.GetPastedRowsFromClipboard();
             if (pastedRows == null)
@@ -259,17 +349,17 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             return result;
         }
 
-        private void ValidateFieldMapping(FieldData newFieldMapping)
+        private void ValidateFieldMapping(FieldMapping newFieldMapping)
         {
             //SP - if required property does not have value; will throw seralizer exception 
             JsonConvert.SerializeObject(newFieldMapping);
 
             // check for duplicates
             var alreadyExistingFieldMapping = TheDocument.FieldMappings
-                .FirstOrDefault(x => x.EncompassFieldId.Equals(newFieldMapping.EncompassFieldId));
+                .FirstOrDefault(x => x.EncompassFieldIdCurrentValue.Equals(newFieldMapping.EncompassFieldIdCurrentValue));
 
             if (alreadyExistingFieldMapping != null)
-                throw new DuplicateException($"Field Mapping with Encompass Field Id '{newFieldMapping.EncompassFieldId}' already exists");
+                throw new DuplicateException($"Field Mapping with Encompass Field Id '{newFieldMapping.EncompassFieldIdCurrentValue}' already exists");
 
             alreadyExistingFieldMapping = TheDocument.FieldMappings
                 .FirstOrDefault(x => x.ExternalFieldId.Equals(newFieldMapping.ExternalFieldId));
@@ -279,9 +369,9 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         }
 
-        private FieldData ConvertClipboardRowToFieldDataMapping(string pastedRow)
+        private FieldMapping ConvertClipboardRowToFieldDataMapping(string pastedRow)
         {
-            var result = new FieldData();
+            var result = new FieldMapping();
             var pastedRowValues = pastedRow.Split(new char[] { '\t' });
 
             for (int i = 0; i < pastedRowValues.Count(); i++)

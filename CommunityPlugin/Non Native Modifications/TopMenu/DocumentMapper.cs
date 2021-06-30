@@ -16,7 +16,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
         protected override void menuItem_Click(object sender, EventArgs e)
         {
-            DocumentMapper_Table_Form f = new DocumentMapper_Table_Form();
+            DocumentMapperTableForm f = new DocumentMapperTableForm();
             f.Show();
         }
     }

@@ -97,5 +97,15 @@ namespace CommunityPlugin.Properties {
                 return ResourceManager.GetStream("Out", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap WyndhamWaiting {
+            get {
+                object obj = ResourceManager.GetObject("WyndhamWaiting", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
