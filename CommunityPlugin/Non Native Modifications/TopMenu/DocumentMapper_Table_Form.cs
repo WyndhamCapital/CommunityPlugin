@@ -26,7 +26,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private static List<ExternalDocumentSource> _externalImportSources;
         private static List<Document> _mapperDocuments = new List<Document>();
         private CustomFieldsInfo _encompassCustomFields;
-        private FieldDefinitionCollection _encompassStandardFields;
+        private List<FieldDefinition> _encompassStandardFields;
         public DocumentMapperTableForm()
         {
             InitializeComponent();
@@ -49,7 +49,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             new TaskFactory().StartNew(() =>
             {
                 _encompassStandardFields =
-                    EncompassHelper.SessionObjects.LoanManager.GetStandardFields().AllFields;
+                    EncompassHelper.SessionObjects.LoanManager.GetStandardFields().AllFields.ToSortedList().ToList();
             });
         }
 
@@ -107,24 +107,6 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             EnableControls();
 
             waitDialog.PleaseWaitForm.Close();
-
-            //new TaskFactory().StartNew(() =>
-            //{
-            //    ExternalDocumentSource selectedSource = GetExternalSourceSelected();
-            //    waitDialog.Progress.Report($"Retrieving docs for '{selectedSource.SourceName}'...");
-
-            //    docs = WcmHelpers.GetMapperDocuments(selectedSource.Id, WcmSettings);
-
-            //}).ContinueWith((x) =>
-            //{
-            //    waitDialog.PleaseWaitForm.Close();
-
-            //    _mapperDocuments = docs;
-
-            //    UpdateDocsGridview(docs);
-            //    EnableControls();
-
-            //});
 
         }
 

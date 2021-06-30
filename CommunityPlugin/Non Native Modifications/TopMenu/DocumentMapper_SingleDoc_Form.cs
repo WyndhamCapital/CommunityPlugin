@@ -23,12 +23,12 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         private readonly int? _externalSourceId;
         private readonly WcmSettings _settings;
         private CustomFieldsInfo _encompassCustomFields;
-        private FieldDefinitionCollection _encompassStandardCommonFields;
+        private List<FieldDefinition> _encompassStandardCommonFields;
 
-        public DocumentMapperSingleDocForm(Document document, 
-            WcmSettings wcmSettings, 
-            CustomFieldsInfo encompassCustomFields, 
-            FieldDefinitionCollection encompassStandardFields)
+        public DocumentMapperSingleDocForm(Document document,
+            WcmSettings wcmSettings,
+            CustomFieldsInfo encompassCustomFields,
+            List<FieldDefinition> encompassStandardFields)
         {
             InitializeComponent();
 
@@ -42,10 +42,10 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
         }
 
 
-        public DocumentMapperSingleDocForm(int externalSourceId, 
+        public DocumentMapperSingleDocForm(int externalSourceId,
             WcmSettings wcmSettings,
             CustomFieldsInfo encompassCustomFields,
-            FieldDefinitionCollection encompassStandardFields)
+            List<FieldDefinition> encompassStandardFields)
         {
             InitializeComponent();
             GridViewHelper.LoadFieldMappingColumns<FieldMapping>(fieldMappingsDataGridView);
@@ -98,8 +98,8 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
             this.MapUiToDocument();
             this.UpdateDocumentMapperDoc();
 
-            if (!ValidateDocumentMapper()) ;
-            return;
+            if (!ValidateDocumentMapper())
+                return;
 
             this.DialogResult = DialogResult.OK;
         }
@@ -109,57 +109,113 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             if (TheDocument.FieldMappings.Any())
             {
-                var encompassFieldsUsedInMappings = GetDistinctEncompassFieldsInMappings(TheDocument.FieldMappings);
 
-                var customFieldsInFieldMappings = encompassFieldsUsedInMappings.
-                    Where(x => x.StartsWith("cx.", StringComparison.OrdinalIgnoreCase)).ToList();
+                var currentValueFieldIds = TheDocument
+                    .FieldMappings
+                    .Select(x => x.EncompassFieldIdCurrentValue).ToList();
 
-                if(ValidateEncompassCustomFieldMappings(customFieldsInFieldMappings) == false)
+                if (ValidateEncompassFields(currentValueFieldIds, false) == false)
                     return false;
 
 
-                var fieldMappingToStandardFields =
-                    TheDocument.FieldMappings
-                        .Where(x => string.IsNullOrEmpty(x.EncompassFieldIdInsertValue) == false)
-                        .Select(x => x.EncompassFieldIdInsertValue)
-                        .Where(y => y.StartsWith("cx.", StringComparison.OrdinalIgnoreCase) == false)
-                        .ToList();
+                var insertValueFieldIds = TheDocument
+                    .FieldMappings
+                    .Select(x => x.EncompassFieldIdInsertValue).ToList();
 
-
-                if (fieldMappingToStandardFields.Any())
-                {
-                    Macro.Alert("We are not set up to insert ");
-                }
-                //var standardFieldsWithErrors = ValidateEncompassStandardFieldMappings(fieldMappingToStandardFields);
+                // SP - for insert value Fields, we are only allowing custom fields right now
+                // the fields will be set in the API, where standard fields are set by object properties, not field ID's
+                // it's possible to add some standard fields (use contract/schema generator), and pass that to update loan
+                // but for V1, only custom fields are allowed
+                if (ValidateEncompassFields(insertValueFieldIds, true) == false)
+                    return false;
 
             }
 
             return true;
         }
 
-        private static List<string> GetDistinctEncompassFieldsInMappings(IList<FieldMapping> fieldMappings)
+        private bool ValidateEncompassFields(List<string> fieldIds, bool allowCustomFieldsOnly)
         {
-            var allFields = fieldMappings.Select(x => x.EncompassFieldIdInsertValue).ToList();
-            allFields.AddRange(fieldMappings.Select(x => x.EncompassFieldIdCurrentValue));
-            allFields = allFields.Where(x => x != null).ToList();
-            return allFields.Distinct().ToList();
+            List<Exception> errors = new List<Exception>();
+            fieldIds.RemoveAll(string.IsNullOrEmpty);
+
+            // if there are no fields to validate, return true, there are no errors
+            if (fieldIds.Any() == false)
+                return true;
+
+
+            var result = true;
+
+            var customFields = fieldIds.
+                Where(x => x.StartsWith("cx.", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            List<string> customFieldErrors = ValidateEncompassCustomFields(customFields);
+            if (customFieldErrors.Any())
+            {
+                errors.Add(new Exception($"The custom fields below do NOT exist. " +
+                                         $"{Environment.NewLine + string.Join(Environment.NewLine, customFieldErrors)}"));
+            }
+
+            var standardFields = fieldIds.Except(customFields).ToList();
+            if (allowCustomFieldsOnly && standardFields.Any())
+            {
+                errors.Add(new Exception($"Only custom field are allowed; the standard fields below are present. " +
+                                         $"{Environment.NewLine + string.Join(Environment.NewLine, standardFields)}"));
+
+            }
+            else
+            {
+                // if standard fields are allowed, check if they exist
+                List<string> standardFieldErrors = ValidateEncompassStandardFields(standardFields);
+                if (standardFieldErrors.Any())
+                {
+                    errors.Add(new Exception($"The standard fields below do NOT exist. " +
+                                             $"{Environment.NewLine + string.Join(Environment.NewLine, standardFieldErrors)}"));
+                }
+            }
+
+
+            if (errors.Any())
+            {
+                MessageBox.Show(UIHelper.FormatListOfExceptionsIntoErrorMessage(errors));
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
-        private object ValidateEncompassStandardFieldMappings(List<FieldMapping> fieldMappingToStandardFields)
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool ValidateEncompassCustomFieldMappings(List<string> encompassCustomFieldsInMappings)
+        private List<string> ValidateEncompassStandardFields(List<string> fieldIds)
         {
             List<string> errorFields = new List<string>();
-            foreach (var customFieldId in encompassCustomFieldsInMappings)
+            foreach (var fieldId in fieldIds)
+            {
+                var standardField = _encompassStandardCommonFields.FirstOrDefault(x =>
+                    x.FieldID.Equals(fieldId,
+                        StringComparison.OrdinalIgnoreCase));
+
+                // if field doesn't exist in encompass; this is a problem
+                if (standardField == null)
+                {
+                    errorFields.Add(fieldId);
+                }
+
+            }
+
+            return errorFields;
+        }
+
+        private List<string> ValidateEncompassCustomFields(List<string> encompassCustomFieldIds)
+        {
+            List<string> errorFields = new List<string>();
+            foreach (var customFieldId in encompassCustomFieldIds)
             {
                 var encompassCustomField = _encompassCustomFields.Cast<CustomFieldInfo>().FirstOrDefault(x =>
                     x.FieldID.Equals(customFieldId,
                         StringComparison.OrdinalIgnoreCase));
 
-                // if field doesn't exist in encompass; this is a problem user must resolve
+                // if field doesn't exist in encompass; this is a problem
                 if (encompassCustomField == null)
                 {
                     errorFields.Add(customFieldId);
@@ -167,16 +223,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             }
 
-            if (errorFields.Any())
-            {
-                MessageBox.Show(
-                    $"The fields below do NOT exist. Please fix them. " +
-                    $"{Environment.NewLine + string.Join(Environment.NewLine, errorFields)}");
-
-                return false;
-            }
-
-            return true;
+            return errorFields;
         }
 
         private bool ValidateContents()
