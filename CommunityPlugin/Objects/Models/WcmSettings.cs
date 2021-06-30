@@ -1,4 +1,7 @@
-﻿namespace CommunityPlugin.Objects.Models
+﻿using System.Collections.Generic;
+using CommunityPlugin.Objects.Models.WCM.PricingAlertAudit;
+
+namespace CommunityPlugin.Objects.Models
 {
     public class WcmSettings
     {
@@ -14,6 +17,8 @@
         public string GetDocumentFromBlendUri { get; set; }
 
         public string UpdateDocExportStatusBlendUri { get; set; }
+
+        public List<PricingAlertField> PricingAlertAuditFields { get; set; }
 
 
     }
