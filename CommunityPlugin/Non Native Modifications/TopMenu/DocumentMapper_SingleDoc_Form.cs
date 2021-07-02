@@ -387,7 +387,7 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                 if (fieldDataMappingProperty != null && fieldDataMappingProperty.CanWrite && value != null)
                 {
 
-                    if (value.GetType().Equals(fieldDataMappingProperty.PropertyType) == false)
+                    if (value.GetType() == fieldDataMappingProperty.PropertyType == false)
                     {
                         throw new InvalidValueException($"Unable to set property '{fieldDataMappingProperty.Name}' type '{fieldDataMappingProperty.GetType()}' the value provided '{value}' type '{value.GetType()}'");
                     }

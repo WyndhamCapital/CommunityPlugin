@@ -22,28 +22,26 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
 
         private void LoadDataExtractionField(UIExtractedField field)
         {
-            if (string.IsNullOrEmpty(field.EncompassFieldDescription))
+            encompassFieldDescrLabel.Text = string.IsNullOrEmpty(field.EncompassCompareFieldDescription) ? 
+                field.EncompassCompareFieldId : $"{field.EncompassCompareFieldId}: {field.EncompassCompareFieldDescription}";
+
+            if (field.EncompassCompareFieldValue != null)
             {
-                encompassFieldDescrLabel.Text = field.EncompassFieldId;
-            }
-            else
-            {
-                encompassFieldDescrLabel.Text = $"{field.EncompassFieldId}: {field.EncompassFieldDescription}";
+                loanValueTextBox.Text = field.EncompassCompareFieldValue.ToString();
             }
 
-            if (string.IsNullOrEmpty(field.ExternalSourceFieldDescription))
+            insertFieldDescrLabel.Text = string.IsNullOrEmpty(field.EncompassInsertValueFieldDescription) ?
+            field.EncompassInsertValueFieldId : $"{field.EncompassInsertValueFieldId}: {field.EncompassInsertValueFieldDescription}";
+
+            if (field.EncompassInsertValueFieldValue != null)
             {
-                dataExtractionFieldDescrLabel.Text = field.ExternalSourceFieldId;
-            }
-            else
-            {
-                dataExtractionFieldDescrLabel.Text = $"{field.ExternalSourceFieldId}: {field.ExternalSourceFieldDescription}";
+                insertFieldValueTextbox.Text = field.EncompassInsertValueFieldValue.ToString();
             }
 
-            if (field.EncompassFieldValue != null)
-            {
-                loanValueTextBox.Text = field.EncompassFieldValue.ToString();
-            }
+            // data extraction properties
+            dataExtractionFieldDescrLabel.Text = string.IsNullOrEmpty(field.ExternalSourceFieldDescription) ? 
+                field.ExternalSourceFieldId : $"{field.ExternalSourceFieldId}: {field.ExternalSourceFieldDescription}";
+
 
             dataExtractionValueTextBox.Text = field.DataExtractionFieldValue;
 

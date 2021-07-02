@@ -11,9 +11,13 @@ namespace CommunityPlugin.Objects.Models.WCM.FieldExtraction.UI
         public CommunityPlugin.Objects.Models.WCM.DocumentMapper.FieldMapping FieldMap { get; set; }
         public string ExternalSourceFieldId { get; set; }
         public string ExternalSourceFieldDescription { get; set; }
-        public string EncompassFieldId { get; set; }
-        public string EncompassFieldDescription { get; set; }
-        public object EncompassFieldValue { get; set; }
+        public string EncompassCompareFieldId { get; set; }
+        public string EncompassCompareFieldDescription { get; set; }
+        public object EncompassCompareFieldValue { get; set; }
+
+        public string EncompassInsertValueFieldId { get; set; }
+        public string EncompassInsertValueFieldDescription { get; set; }
+        public object EncompassInsertValueFieldValue { get; set; }
 
         public string DataExtractionFieldValue { get; set; }
 

@@ -27,21 +27,6 @@ namespace CommunityPlugin.Standard_Plugins
 
         private void LoadDocuments()
         {
-            //  // if handler isn't removed, loading the scenario names will trigger the event to load that scenario
-            //  DocumentsDropDownBox.SelectedIndexChanged -= new System.EventHandler(this.DocumentsDropDownBox_SelectedIndexChanged);
-
-            //  DocumentsDropDownBox.DataSource = null;
-
-            //// FieldExtractedDocs = FieldExtractedDocs.OrderBy(x => x.DocType);
-            //  DocumentsDropDownBox.DisplayMember = "DocType";
-            //  DocumentsDropDownBox.ValueMember = "Id";
-            //  DocumentsDropDownBox.DataSource = FieldExtractedDocs;
-
-
-            //  DocumentsDropDownBox.SelectedIndexChanged += new System.EventHandler(this.DocumentsDropDownBox_SelectedIndexChanged);
-
-            //  DocumentsDropDownBox.Refresh();
-
 
             GridViewHelper.LoadFieldMappingColumns<IClassifiedDocument>(ExtractedDocsDataGridView);
             SetCountOfFieldsExtracted();
@@ -65,7 +50,7 @@ namespace CommunityPlugin.Standard_Plugins
         private void LoadDocument(IClassifiedDocument documentToLoad)
         {
             DocumentTypeLabel.Text = documentToLoad.DocType;
-            ConfidenceLabel.Text = $"Confidence: {documentToLoad.Confidence}";
+            ConfidenceLabel.Text = $@"Confidence: {documentToLoad.Confidence}. ID: {documentToLoad.Id.ToString()}";
 
             FieldsFlowLayoutPanel.Controls.Clear();
 
@@ -92,14 +77,32 @@ namespace CommunityPlugin.Standard_Plugins
             if (fieldMap != null)
             {
                 result.FieldMap = fieldMap;
-                result.EncompassFieldId = fieldMap.EncompassFieldIdCurrentValue;
 
-                var encompassField = EncompassApplication.CurrentLoan.Fields[fieldMap.EncompassFieldIdCurrentValue];
-                if (encompassField != null)
+                if (string.IsNullOrEmpty(fieldMap.EncompassFieldIdCurrentValue) == false)
                 {
-                    result.EncompassFieldDescription = encompassField.Descriptor.Description;
-                    result.EncompassFieldValue = encompassField.Value;
+                    result.EncompassCompareFieldId = fieldMap.EncompassFieldIdCurrentValue;
+
+                    var encompassField = EncompassApplication.CurrentLoan.Fields[fieldMap.EncompassFieldIdCurrentValue];
+                    if (encompassField != null)
+                    {
+                        result.EncompassCompareFieldDescription = encompassField.Descriptor.Description;
+                        result.EncompassCompareFieldValue = encompassField.Value;
+                    }
                 }
+
+
+                if (string.IsNullOrEmpty(fieldMap.EncompassFieldIdInsertValue) == false)
+                {
+                    result.EncompassInsertValueFieldId = fieldMap.EncompassFieldIdInsertValue;
+
+                    var encompassField = EncompassApplication.CurrentLoan.Fields[fieldMap.EncompassFieldIdInsertValue];
+                    if (encompassField != null)
+                    {
+                        result.EncompassInsertValueFieldDescription = encompassField.Descriptor.Description;
+                        result.EncompassInsertValueFieldValue = encompassField.Value;
+                    }
+                }
+
             }
 
             return result;

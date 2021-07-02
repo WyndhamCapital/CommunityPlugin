@@ -12,7 +12,7 @@ namespace CommunityPlugin.Objects.Models.WCM.FieldExtraction
 
 
         // SP - used in UI to show number of fields extracted
-        [UIMap(DisplayName = "Number Fields")]
+        [UIMap(DisplayName = "# Fields")]
         int FieldDataCount { get; set; }
     }
 }
