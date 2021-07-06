@@ -53,7 +53,7 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 
         public override void FieldChanged(object sender, FieldChangeEventArgs fieldChangeEventArgs)
         {
-           
+           // this is where we will trigger notes/ cd etc to title. create field IDs for prelim Cd/ post con cd/ updated cd etc
         }
 
         public override void LoanOpened(object sender, EventArgs e)
