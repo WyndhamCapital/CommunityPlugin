@@ -17,7 +17,7 @@ namespace CommunityPlugin.Non_Native_Modifications.SideMenu.UserControls
         private FlowLayoutPanel layout;
         public override bool CanRun()
         {
-            return PluginAccess.CheckAccess(nameof(LinksAndResources), true);
+            return PluginAccess.CheckAccess(nameof(SideMenu), true);
         }
 
         public override bool CanShow()
@@ -31,7 +31,7 @@ namespace CommunityPlugin.Non_Native_Modifications.SideMenu.UserControls
         }
         private void RefreshControl()
         {
-            this.Name = "Links And Resources";
+            this.Name = "Loan Workflow";
             List<CustomLinkLabel> links = GetLinkLabels();
 
             this.Size = new System.Drawing.Size(320, ((links.Count + 3) * 28));
