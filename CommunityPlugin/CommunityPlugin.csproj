@@ -529,6 +529,7 @@
     <Compile Include="Standard Plugins\PricingAlertAudit.cs" />
     <Compile Include="Standard Plugins\VirtualFields.cs" />
     <Compile Include="Standard Plugins\Wcm Plugins\BlendDocumentMapper.cs" />
+    <Compile Include="Standard Plugins\Wcm Plugins\SilkTitle_Plugin.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Non Native Modifications\Dialog\BlendConditionManagerPost_Control.resx">

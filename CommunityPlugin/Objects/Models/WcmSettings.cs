@@ -25,5 +25,9 @@ namespace CommunityPlugin.Objects.Models
 
         // DB id of ai provider; used to query for document mappings
         public int DocumentMapperAiExternalSourceId { get; set; }
+
+        //silk endpoints
+        public string PostTitleOrderToSilk { get; set; }
+        public string PostDocToSilk { get; internal set; }
     }
 }
