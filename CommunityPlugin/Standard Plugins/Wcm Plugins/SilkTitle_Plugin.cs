@@ -7,6 +7,8 @@ using CommunityPlugin.Objects;
 using CommunityPlugin.Objects.Helpers;
 using CommunityPlugin.Objects.Interface;
 using CommunityPlugin.Objects.Models;
+using EllieMae.EMLite.DataEngine.Util;
+using EllieMae.Encompass.Automation;
 using EllieMae.Encompass.BusinessObjects.Loans;
 using EllieMae.Encompass.BusinessObjects.Loans.Logging;
 using EllieMae.Encompass.Collections;
@@ -17,7 +19,7 @@ using Attachment = EllieMae.Encompass.BusinessObjects.Loans.Attachment;
 
 namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 {
-    class SilkTitle_Plugin : Plugin, IMilestoneCompleted, IFieldChange
+    class SilkTitle_Plugin : Plugin, IMilestoneCompleted, IFieldChange, ILoanOpened
     {
         private static readonly WcmSettings WcmSettings = CDOHelper.CDO.CommunitySettings.WcmSettings;
         public override bool Authorized()
@@ -28,7 +30,7 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
         //Milestone Items for Silk
         public override void MilestoneCompleted(object sender, MilestoneEventArgs milestoneEventArgs)
         {
-            Loan loan = milestoneEventArgs.Loan;
+            Loan loan = EncompassApplication.CurrentLoan;
             string currentMilestone = loan.Fields["Log.MS.Stage"].ToString();
             string titleCompany = loan.Fields["411"].ToString();
             if (titleCompany.Contains("Silk"))
@@ -49,9 +51,46 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
             
         }
 
+        public override void FieldChanged(object sender, FieldChangeEventArgs fieldChangeEventArgs)
+        {
+           
+        }
+
+        public override void LoanOpened(object sender, EventArgs e)
+        {
+            //assign processor/ closer on loan opened once they have been assigned
+            
+            //first check to see if user is on loan, then check to see if already assigned in silk
+            Loan loan = EncompassApplication.CurrentLoan;
+            string postProcessorToSilkContainerUri = WcmSettings.PostProcessorToSilkUrl;
+            string processorId = loan.Fields["LPID"].ToString();
+            if (string.IsNullOrEmpty(processorId) == false)
+            {
+                if (loan.Fields["CX.SILK.PROCESR.ASSIGN.DATE"].IsEmpty())
+                {
+                    string processorEmail = loan.Fields["1409"].ToString();
+
+                    GenericServiceResponse addProcessorResponse = SilkUtility.AddUserToSilkOrder(loan, processorEmail, postProcessorToSilkContainerUri);
+
+                    if (addProcessorResponse.WasSuccessful == false)
+                    {
+                        //some type of alert
+                    }
+                    else
+                    {
+                        loan.Fields["CX.SILK.PROCESR.ASSIGN.DATE"].Value = DateTime.Today;
+                    }
+
+                }
+            }
+
+           
+
+        }
+
         private bool PostPreliminaryTitleOrderDocsToSilk(Loan loan)
         {
-            string postDocToSilkUri = WcmSettings.PostDocToSilk;
+            string postDocToSilkUri = WcmSettings.PostDocToSilkUrl;
             //grab 1003 and title quote from eFolder
             List<B64SilkDocument> docsToPost = new List<B64SilkDocument>();
 
@@ -126,7 +165,7 @@ namespace CommunityPlugin.Standard_Plugins.Wcm_Plugins
 
             //send to silk
 
-            var silkTitleContainerUri = WcmSettings.PostTitleOrderToSilk;
+            var silkTitleContainerUri = WcmSettings.PostTitleOrderToSilkUrl;
 
             var titleResponse = SilkUtility.PostTitleOrderToSilk(loan, silkTitleContainerUri, titleRequest);
 

@@ -27,7 +27,9 @@ namespace CommunityPlugin.Objects.Models
         public int DocumentMapperAiExternalSourceId { get; set; }
 
         //silk endpoints
-        public string PostTitleOrderToSilk { get; set; }
-        public string PostDocToSilk { get; internal set; }
+        public string PostTitleOrderToSilkUrl { get; set; }
+        public string PostDocToSilkUrl { get; set; }
+        public string PostProcessorToSilkUrl { get; set; }
+        public string PostCloserToSilkUrl { get; set; }
     }
 }
