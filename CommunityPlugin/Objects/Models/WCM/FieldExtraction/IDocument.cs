@@ -4,6 +4,7 @@ namespace CommunityPlugin.Objects.Models.WCM.FieldExtraction
 {
     public interface IDocument
     {
+        [UIMap(Ignore = true)]
         int Id { get; set; }
         [UIMap(Ignore = true)]
         string FilePath { get; set; }
