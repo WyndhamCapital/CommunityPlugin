@@ -85,6 +85,16 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
 
             result = GridViewHelper.SetRowObjectPropertiesFromGridViewColumns(result, row, fieldMappingsDataGridView);
 
+            //if (string.IsNullOrEmpty(result.EncompassFieldIdInsertValue) == false)
+            //{
+            //    result.EncompassFieldIdInsertValue = result.EncompassFieldIdInsertValue.Trim();
+            //}
+
+            //if (string.IsNullOrEmpty(result.ExternalFieldId) == false)
+            //{
+            //    result.ExternalFieldId = result.ExternalFieldId.Trim();
+            //}
+
             return result;
         }
 

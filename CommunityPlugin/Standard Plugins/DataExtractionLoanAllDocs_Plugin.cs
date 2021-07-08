@@ -11,6 +11,7 @@ using CommunityPlugin.Objects.Interface;
 using CommunityPlugin.Objects.Models;
 using CommunityPlugin.Objects.Models.WCM.DocumentMapper;
 using CommunityPlugin.Objects.Models.WCM.FieldExtraction;
+using CommunityPlugin.Objects.Models.WCM.Helpers;
 using EllieMae.Encompass.Automation;
 using Newtonsoft.Json;
 using WyndhamLib.Authentication;
@@ -57,9 +58,12 @@ namespace CommunityPlugin.Standard_Plugins
 
         private void LoadExtractedDataFieldsForm()
         {
+            var waitDialog = new PleaseWaitDialog();
+            waitDialog.Progress.Report($"Loading Field Extraction Data for '{EncompassApplication.CurrentLoan.LoanNumber}'...");
 
             new TaskFactory().StartNew(GetLoanExtractedDataFieldsAsync).ContinueWith((x) =>
             {
+                waitDialog.PleaseWaitForm.Close();
                 var th = new Thread(() =>
                 {
                     _displayDocsform = new DataExtractionLoanAllDocsForm(_fieldExtractedDocs.ToList(), _dataExtractionDocumentMaps);

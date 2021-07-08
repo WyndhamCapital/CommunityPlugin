@@ -134,11 +134,25 @@ namespace CommunityPlugin.Objects.Helpers
                     var value = row.Cells[propertyInfo.Name].Value;
                     if (propertyInfo != null && propertyInfo.CanWrite)
                     {
+                        // SP - important to set property as null so that if the property was being changed from something to null,
+                        // the changes sticks, otherwise the original value will remain
                         if (value == null)
+                        {
                             propertyInfo.SetValue(result, null, null);
-
+                        }
                         else if (value != null && value != System.DBNull.Value)
-                            propertyInfo.SetValue(result, value, null);
+                        {
+                            // SP - need to call .Trim() method to take out any whitespace or new lines created by datagridview UI
+                            if (propertyInfo.PropertyType == typeof(string))
+                            {
+                                propertyInfo.SetValue(result, value.ToString().Trim(), null);
+                            }
+                            else
+                            {
+                                propertyInfo.SetValue(result, value, null);
+                            }
+
+                        }
                     }
                 }
             }
