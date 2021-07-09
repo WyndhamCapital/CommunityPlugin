@@ -522,6 +522,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Standard Plugins\HCAutomate.cs" />
+    <Compile Include="Standard Plugins\InvestorTemplateAutomate.cs" />
     <Compile Include="Standard Plugins\KickEveryoneOut.cs" />
     <Compile Include="Standard Plugins\LiveTestUser.cs" />
     <Compile Include="Standard Plugins\OpeneFolderDocument.cs" />
