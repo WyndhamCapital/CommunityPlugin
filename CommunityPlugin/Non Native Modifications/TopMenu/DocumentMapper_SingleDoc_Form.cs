@@ -132,14 +132,14 @@ namespace CommunityPlugin.Non_Native_Modifications.TopMenu
                     .FieldMappings
                     .Select(x => x.EncompassFieldIdInsertValue).ToList();
 
-                // SP - for insert value Fields, we are only allowing custom fields right now
+                // SP - for insert value Fields, we a                                                                       re only allowing custom fields right now
                 // the fields will be set in the API, where standard fields are set by object properties, not field ID's
                 // it's possible to add some standard fields (use contract/schema generator), and pass that to update loan
                 // but for V1, only custom fields are allowed
                 if (ValidateEncompassFields(insertValueFieldIds, true) == false)
                     return false;
 
-            }
+            }      
 
             return true;
         }

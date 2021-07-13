@@ -26,7 +26,13 @@ namespace CommunityPlugin.Standard_Plugins
 
         public override void FieldChanged(object sender, FieldChangeEventArgs e)
         {
-            if (e.FieldID.Equals("VEND.X263") && !string.IsNullOrEmpty(e.NewValue))
+            // vend.x263 - investor name
+            // 2014 - shipping date
+            // SP - when either field above changes, apply investor template
+            // EM Investor tool used by secondary to set investor name initially which will not trigger this plugin
+            // which is why we added shipping date as another trigger
+            if ((e.FieldID.Equals("VEND.X263") || e.FieldID.Equals("2014"))
+                && !string.IsNullOrEmpty(e.NewValue))
             {
                 if (EncompassApplication.CurrentLoan.Fields["1999"].IsEmpty() == false)
                 {
