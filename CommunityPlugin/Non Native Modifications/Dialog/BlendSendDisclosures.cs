@@ -3,7 +3,6 @@ using CommunityPlugin.Objects.Helpers;
 using CommunityPlugin.Objects.Interface;
 using CommunityPlugin.Objects.Models;
 using EllieMae.EMLite.UI;
-using EllieMae.EMLite.WebServices;
 using EllieMae.Encompass.Automation;
 using EllieMae.Encompass.BusinessObjects.Loans.Logging;
 using EllieMae.Encompass.BusinessObjects.Users;
@@ -30,6 +29,8 @@ namespace CommunityPlugin.Non_Native_Modifications.Dialog
         GridView DocumentGrid;
         string DocumentGridControlId = "gvDocuments";
         UserPersonaBreakOut PersonaBreakOut;
+
+   
 
         public override bool Authorized()
         {

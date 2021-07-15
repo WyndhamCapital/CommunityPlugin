@@ -218,6 +218,7 @@
     <Compile Include="Non Native Modifications\Dialog\DataExtractionField_Control.Designer.cs">
       <DependentUpon>DataExtractionField_Control.cs</DependentUpon>
     </Compile>
+    <Compile Include="Non Native Modifications\Dialog\DisclosurePlanCodeValidation.cs" />
     <Compile Include="Non Native Modifications\Dialog\HighlightImportedDocsEfolderDialog.cs" />
     <Compile Include="Non Native Modifications\DisableServices.cs" />
     <Compile Include="Non Native Modifications\FormWrapper.cs" />
@@ -522,6 +523,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Standard Plugins\HCAutomate.cs" />
+    <Compile Include="Standard Plugins\InvestorTemplateAutomate.cs" />
     <Compile Include="Standard Plugins\KickEveryoneOut.cs" />
     <Compile Include="Standard Plugins\LiveTestUser.cs" />
     <Compile Include="Standard Plugins\OpeneFolderDocument.cs" />
