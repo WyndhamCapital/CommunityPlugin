@@ -37,7 +37,16 @@ namespace CommunityPlugin.Standard_Plugins
                 if (EncompassApplication.CurrentLoan.Fields["1999"].IsEmpty() == false)
                 {
 
-                    string investorName = e.NewValue;
+                    string investorName = string.Empty;
+                    if (e.FieldID.Equals("VEND.X263"))
+                    {
+                        investorName = e.NewValue;
+                    }
+                    else
+                    {
+                        investorName = EncompassApplication.CurrentLoan.Fields["VEND.X263"].ToString();
+                    }
+
 
                     var investorTemplate = EncompassApplication.Session.SystemSettings.Secondary.InvestorTemplates[investorName];
                     if (investorTemplate == null)
